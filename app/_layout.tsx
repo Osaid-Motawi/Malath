@@ -1,24 +1,55 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { useEffect, useState } from "react";
+import { Stack, useRouter, useSegments } from "expo-router";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "../FirebaseConfig";
+import { ChaletProvider } from "./page/screens/components/ChaletContext";
+import { ActivityIndicator, View } from "react-native";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+function AuthGate({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [checking, setChecking] = useState(true);
+  const segments = useSegments();
+  const router = useRouter();
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setChecking(false);
+    });
+    return unsub;
+  }, []);
+
+  useEffect(() => {
+    if (checking) return;
+
+    const inTabs = segments[0] === "(tabs)";
+
+    if (!user && inTabs) {
+      router.replace("/login");
+    } else if (user && !inTabs) {
+      router.replace("/(tabs)");
+    }
+  }, [user, checking, segments]);
+
+  if (checking) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#2563EB" />
+      </View>
+    );
+  }
+
+  return <>{children}</>;
+}
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+    <ChaletProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    </ChaletProvider>
   );
 }
