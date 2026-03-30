@@ -1,9 +1,12 @@
-import { collection, getDocs, addDoc } from "firebase/firestore";import { db } from "../../../FirebaseConfig"; 
+import { addDoc, collection, getDocs } from "firebase/firestore";
+import { db } from "../../../FirebaseConfig";
 export interface Chalet {
   id: string;
   name: string;
   location: string;
   price: number;
+    rating?: number;
+image?: string;
 images: string[];  capacity: number;
 }
 

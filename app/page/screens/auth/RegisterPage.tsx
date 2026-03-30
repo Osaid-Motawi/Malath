@@ -105,24 +105,37 @@ export default function RegisterPage() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#fff" },
+  safe: { flex: 1, backgroundColor: "#F5F0EB" },
   container: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 40, gap: 16 },
   backBtn: { alignSelf: "flex-start", padding: 4 },
   backIcon: { fontSize: 22, color: "#1a1a1a" },
-  title: { fontSize: 26, fontWeight: "bold", color: "#1a1a1a", textAlign: "center", marginBottom: 8 },
+  title: {
+    fontSize: 28, fontWeight: "bold", color: "#1a1a1a",
+    textAlign: "center", marginBottom: 8,
+  },
   row: { flexDirection: "row", gap: 12 },
   inputWrapper: { gap: 6 },
-  label: { fontSize: 14, fontWeight: "600", color: "#374151" },
-  input: { borderWidth: 1, borderColor: "#E5E7EB", borderRadius: 10, padding: 14, fontSize: 15, color: "#1a1a1a", backgroundColor: "#fff" },
-  passwordContainer: { flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: "#E5E7EB", borderRadius: 10, paddingHorizontal: 14, backgroundColor: "#fff" },
+  label: { fontSize: 13, fontWeight: "600", color: "#374151" },
+  input: {
+    borderWidth: 1, borderColor: "#E2D9D0", borderRadius: 10,
+    padding: 14, fontSize: 15, color: "#1a1a1a", backgroundColor: "#fff",
+  },
+  passwordContainer: {
+    flexDirection: "row", alignItems: "center",
+    borderWidth: 1, borderColor: "#E2D9D0", borderRadius: 10,
+    paddingHorizontal: 14, backgroundColor: "#fff",
+  },
   passwordInput: { flex: 1, padding: 14, fontSize: 15, color: "#1a1a1a" },
   eyeIcon: { fontSize: 18 },
   hint: { fontSize: 12, color: "#7C5C3E", marginTop: 2 },
   errorBox: { backgroundColor: "#FEE2E2", borderRadius: 8, padding: 10 },
   errorText: { color: "#DC2626", fontSize: 13, textAlign: "center" },
-  registerBtn: { backgroundColor: "#1a1a1a", borderRadius: 12, padding: 16, alignItems: "center", marginTop: 4 },
+  registerBtn: {
+    backgroundColor: "#2C1A12", borderRadius: 12,
+    padding: 16, alignItems: "center", marginTop: 4,
+  },
   btnDisabled: { backgroundColor: "#6B7280" },
   registerBtnText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
   terms: { fontSize: 12, color: "#6B7280", textAlign: "center", lineHeight: 18 },
-  termsLink: { color: "#2563EB", fontWeight: "600" },
+  termsLink: { color: "#7C5C3E", fontWeight: "600" },
 });

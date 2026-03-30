@@ -1,13 +1,10 @@
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  GoogleAuthProvider,
-  signInWithCredential,
-} from "firebase/auth";
-import { auth } from "../../../FirebaseConfig"; 
-import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from "firebase/auth";
+import { auth } from "../../../FirebaseConfig";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -24,6 +21,3 @@ export const registerUser = async (email: string, password: string) => {
 export const logoutUser = async () => {
   await signOut(auth);
 };
-
-export const WEB_CLIENT_ID =
-  "593418374423-7d8fa65j8sfu1jhl5gop89icuqqa2d6m.apps.googleusercontent.com";

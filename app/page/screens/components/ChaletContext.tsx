@@ -1,10 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { getChalets, Chalet } from "../../services/chaletService";
-import {
-  getFavorites,
-  addFavorite,
-  removeFavorite,
-} from "../../services/favoriteService";
+import { getFavorites, addFavorite, removeFavorite } from "../../services/favoriteService";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../../FirebaseConfig";
 
 interface ChaletContextType {
   chalets: Chalet[];
@@ -22,16 +20,20 @@ export const ChaletProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadData = async () => {
-      const [chaletsData, favoritesData] = await Promise.all([
-        getChalets(),
-        getFavorites(),
-      ]);
-      setChalets(chaletsData);
-      setFavorites(favoritesData);
+    getChalets().then(setChalets);
+  }, []);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const favs = await getFavorites();
+        setFavorites(favs);
+      } else {
+        setFavorites([]);
+      }
       setLoading(false);
-    };
-    loadData();
+    });
+    return () => unsub();
   }, []);
 
   const toggleFavorite = async (chaletId: string) => {
@@ -47,9 +49,7 @@ export const ChaletProvider = ({ children }: { children: React.ReactNode }) => {
   const isFavorite = (chaletId: string) => favorites.includes(chaletId);
 
   return (
-    <ChaletContext.Provider
-      value={{ chalets, favorites, loading, toggleFavorite, isFavorite }}
-    >
+    <ChaletContext.Provider value={{ chalets, favorites, loading, toggleFavorite, isFavorite }}>
       {children}
     </ChaletContext.Provider>
   );

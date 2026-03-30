@@ -1,275 +1,133 @@
-import React, { useState, useRef } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-} from "react-native";
+import React, { useRef, useState } from "react";
+import {Dimensions, Image,NativeScrollEvent,NativeSyntheticEvent,ScrollView,StyleSheet,Text,TouchableOpacity,View,} from "react-native";
+import Svg, { Circle, Path } from "react-native-svg";
 import { Chalet } from "../../services/chaletService";
 import { useChalets } from "./ChaletContext";
 
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = width - 32; 
+const CARD_WIDTH = width - 32;
+
+const HeartIcon = ({ filled }: { filled: boolean }) => (
+  <Svg width="20" height="20" viewBox="0 0 24 24">
+    <Path
+      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      fill={filled ? "#e11d48" : "none"}
+      stroke={filled ? "#e11d48" : "#fff"}
+      strokeWidth="1.8"
+    />
+  </Svg>
+);
+
+const PersonIcon = () => (
+  <Svg width="15" height="15" viewBox="0 0 24 24">
+    <Circle cx="12" cy="7" r="4" fill="#000000" />
+    <Path d="M4 21v-1a8 8 0 0116 0v1" fill="#000000" />
+  </Svg>
+);
 
 interface Props {
   chalet: Chalet;
   onPress?: (chalet: Chalet) => void;
 }
 
-const ChaletCard = ({ chalet, onPress }: Props) => {
+ function ChaletCard({ chalet, onPress }: Props) {
   const { toggleFavorite, isFavorite } = useChalets();
-  const favorite = isFavorite(chalet.id);
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
 
-  const images =
-    chalet.images?.length > 0
-      ? chalet.images
-      : ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400"];
+  const images = chalet.image ? [chalet.image] : chalet.images?.length ? chalet.images : [];
+  const discount = 5;
+  const originalPrice = Math.round(chalet.price / (1 - discount / 100));
 
-  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const index = Math.round(e.nativeEvent.contentOffset.x / CARD_WIDTH);
-    setActiveIndex(index);
-  };
-
-  const goTo = (dir: "prev" | "next") => {
-    const next =
-      dir === "next"
-        ? Math.min(activeIndex + 1, images.length - 1)
-        : Math.max(activeIndex - 1, 0);
-    scrollRef.current?.scrollTo({ x: next * CARD_WIDTH, animated: true });
-    setActiveIndex(next);
-  };
+  function handleScroll(e: NativeSyntheticEvent<NativeScrollEvent>) {
+    setActiveIndex(Math.round(e.nativeEvent.contentOffset.x / CARD_WIDTH));
+  }
 
   return (
-    <TouchableOpacity style={styles.card} onPress={() => onPress?.(chalet)} activeOpacity={0.95}>
-      {/* Carousel */}
-      <View style={styles.imageContainer}>
-        <ScrollView
-          ref={scrollRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={handleScroll}
-          scrollEventThrottle={16}
-        >
-          {images.map((uri, index) => (
-            <Image
-              key={index}
-              source={{ uri }}
-              style={[styles.image, { width: CARD_WIDTH }]}
-            />
-          ))}
-        </ScrollView>
-
-        {/* سهم يسار */}
-        {activeIndex > 0 && (
-          <TouchableOpacity style={[styles.arrow, styles.arrowLeft]} onPress={() => goTo("prev")}>
-            <Text style={styles.arrowText}>‹</Text>
-          </TouchableOpacity>
+    <TouchableOpacity style={s.card} onPress={() => onPress?.(chalet)} activeOpacity={0.93}>
+      <View style={s.imgWrapper}>
+        {images.length > 0 ? (
+          <ScrollView ref={scrollRef} horizontal pagingEnabled showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={handleScroll} scrollEventThrottle={16}>
+            {images.map((uri, i) => (
+              <Image key={i} source={{ uri }} style={[s.img, { width: CARD_WIDTH }]} resizeMode="cover" />
+            ))}
+          </ScrollView>
+        ) : (
+          <View style={s.img} />
         )}
 
-        {/* سهم يمين */}
-        {activeIndex < images.length - 1 && (
-          <TouchableOpacity style={[styles.arrow, styles.arrowRight]} onPress={() => goTo("next")}>
-            <Text style={styles.arrowText}>›</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity style={s.heartBtn} onPress={() => toggleFavorite(chalet.id)}>
+          <HeartIcon filled={isFavorite(chalet.id)} />
+        </TouchableOpacity>
 
-        {/* Dots */}
         {images.length > 1 && (
-          <View style={styles.dots}>
+          <View style={s.dots}>
             {images.map((_, i) => (
-              <View
-                key={i}
-                style={[styles.dot, i === activeIndex && styles.dotActive]}
-              />
+              <View key={i} style={[s.dot, i === activeIndex && s.dotActive]} />
             ))}
           </View>
         )}
-
-        {/* زر القلب */}
-        <TouchableOpacity
-          style={styles.heartBtn}
-          onPress={() => toggleFavorite(chalet.id)}
-        >
-          <Text style={styles.heartIcon}>{favorite ? "❤️" : "🤍"}</Text>
-        </TouchableOpacity>
-
-        {/* خصم */}
-        <View style={styles.discountBadge}>
-          <Text style={styles.discountText}>30% خصم</Text>
-        </View>
       </View>
 
-      {/* المعلومات */}
-      <View style={styles.info}>
-        <View style={styles.ratingRow}>
-          <Text style={styles.star}>⭐</Text>
-          <Text style={styles.ratingText}>4.5</Text>
-          <Text style={styles.ratingCount}>(173) تقييم</Text>
+      <View style={s.info}>
+        <View style={s.topRow}>
+          <View style={s.capacityBox}>
+            <PersonIcon />
+            <Text style={s.capacityText}>{chalet.capacity}</Text>
+          </View>
+          <View style={s.ratingRow}>
+            <Text style={s.gray}>تقييم</Text>
+            <Text style={s.gray}>{chalet.rating ?? 0}</Text>
+            <Text style={s.star}>★</Text>
+          </View>
         </View>
-
-        <Text style={styles.name} numberOfLines={1}>
-          {chalet.name}
-        </Text>
-
-        <Text style={styles.location}>📍 {chalet.location}</Text>
-
-        <View style={styles.capacityRow}>
-          <Text style={styles.capacityText}>👥 {chalet.capacity}</Text>
-        </View>
-
-        <View style={styles.footer}>
-          <Text style={styles.price}>{chalet.price} ₪</Text>
-          <Text style={styles.perNight}> / ليلة</Text>
+        <Text style={s.name} numberOfLines={2}>{chalet.name}</Text>
+        <Text style={[s.gray, { textAlign: "right" }]}>{chalet.location}</Text>
+        <View style={s.priceRow}>
+          <View style={s.badge}>
+            <Text style={s.badgeText}>%{discount} خصم</Text>
+          </View>
+          <View style={s.priceRight}>
+            <Text style={s.gray}>/ليلة</Text>
+            <Text style={s.price}>{chalet.price} ₪</Text>
+            <Text style={s.oldPrice}>{originalPrice}</Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
   );
-};
+}
 
-const styles = StyleSheet.create({
+const s = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    overflow: "hidden",
+    backgroundColor: "#fff", borderRadius: 12, marginBottom: 14,
+    shadowColor: "#000", shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06, shadowRadius: 6, elevation: 2, overflow: "hidden",
   },
-  imageContainer: {
-    position: "relative",
-  },
-  image: {
-    height: 200,
-    backgroundColor: "#e0e0e0",
-  },
-  arrow: {
-    position: "absolute",
-    top: "50%",
-    marginTop: -20,
-    backgroundColor: "#ffffffcc",
-    borderRadius: 20,
-    width: 36,
-    height: 36,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  arrowLeft: {
-    left: 10,
-  },
-  arrowRight: {
-    right: 10,
-  },
-  arrowText: {
-    fontSize: 24,
-    color: "#1a1a1a",
-    lineHeight: 28,
-  },
-  dots: {
-    position: "absolute",
-    bottom: 10,
-    alignSelf: "center",
-    flexDirection: "row",
-    gap: 5,
-    left: 0,
-    right: 0,
-    justifyContent: "center",
-  },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "#ffffff88",
-  },
-  dotActive: {
-    backgroundColor: "#fff",
-    width: 18,
-  },
+  imgWrapper: { borderTopLeftRadius: 12, borderTopRightRadius: 12, overflow: "hidden" },
+  img: { height: 205, backgroundColor: "#e5e7eb" },
   heartBtn: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    backgroundColor: "#ffffffcc",
-    borderRadius: 20,
-    padding: 6,
+    position: "absolute", top: 10, right: 10,
+     width: 34, height: 34,
+    justifyContent: "center", alignItems: "center",
   },
-  heartIcon: {
-    fontSize: 20,
-  },
-  discountBadge: {
-    position: "absolute",
-    top: 10,
-    left: 10,
-    backgroundColor: "#EF4444",
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  discountText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 12,
-  },
-  info: {
-    padding: 12,
-    gap: 5,
-  },
-  ratingRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 3,
-  },
-  star: { fontSize: 13 },
-  ratingText: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-  },
-  ratingCount: {
-    fontSize: 12,
-    color: "#9CA3AF",
-  },
-  name: {
-    fontSize: 17,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-  },
-  location: {
-    fontSize: 13,
-    color: "#6B7280",
-  },
-  capacityRow: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  capacityText: {
-    fontSize: 13,
-    color: "#6B7280",
-  },
-  footer: {
-    flexDirection: "row",
-    alignItems: "baseline",
-    marginTop: 4,
-  },
-  price: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#2563EB",
-  },
-  perNight: {
-    fontSize: 13,
-    color: "#9CA3AF",
-  },
+  dots: { position: "absolute", bottom: 9, left: 0, right: 0, flexDirection: "row", justifyContent: "center", gap: 4 },
+  dot: { width: 5, height: 5, borderRadius: 3, backgroundColor: "#ffffff55" },
+  dotActive: { backgroundColor: "#fff", width: 16 },
+  info: { paddingHorizontal: 11, paddingTop: 9, paddingBottom: 11, gap: 4 },
+  topRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  capacityBox: { flexDirection: "row", alignItems: "center", gap: 4 },
+  capacityText: { fontSize: 13, color: "#6B7280" },
+  ratingRow: { flexDirection: "row", alignItems: "center", gap: 4 },
+  star: { fontSize: 13, color: "#000000" },
+  gray: { fontSize: 12, color: "#6B7280" },
+  name: { fontSize: 15, fontWeight: "700", color: "#111827", textAlign: "right", lineHeight: 22 },
+  priceRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
+  badge: { backgroundColor: "#517c63", borderRadius: 5, paddingHorizontal: 7, paddingVertical: 3 },
+  badgeText: { color: "#fff", fontSize: 11, fontWeight: "700" },
+  priceRight: { flexDirection: "row", alignItems: "baseline", gap: 4 },
+  oldPrice: { fontSize: 12, color: "#9CA3AF", textDecorationLine: "line-through" },
+  price: { fontSize: 15, fontWeight: "700", color: "#111827" },
 });
-
 export default ChaletCard;

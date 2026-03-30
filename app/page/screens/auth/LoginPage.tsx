@@ -1,10 +1,12 @@
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-  View, Text, TextInput, TouchableOpacity, StyleSheet,
   ActivityIndicator, KeyboardAvoidingView, Platform,
+  StyleSheet,
+  Text, TextInput, TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
 import { loginUser, logoutUser } from "../../services/authService";
 
 export default function LoginPage() {
@@ -130,34 +132,51 @@ export default function LoginPage() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#fff" },
-  container: { flex: 1, paddingHorizontal: 24, justifyContent: "center" },
-  header: { alignItems: "center", marginBottom: 36 },
-  welcome: { fontSize: 22, fontWeight: "bold", color: "#1a1a1a" },
-  title: { fontSize: 20, fontWeight: "600", color: "#1a1a1a", marginTop: 4 },
-  form: { gap: 14 },
+  safe: { flex: 1, backgroundColor: "#F5F0EB" },
+  container: { flex: 1, paddingHorizontal: 28, justifyContent: "center" },
+  header: { alignItems: "center", marginBottom: 40 },
+  welcome: { fontSize: 22, fontWeight: "600", color: "#1a1a1a" },
+  title: { fontSize: 28, fontWeight: "bold", color: "#1a1a1a", marginTop: 2 },
+  form: { gap: 16 },
   inputWrapper: { gap: 6 },
-  label: { fontSize: 14, fontWeight: "600", color: "#374151" },
-  input: { borderWidth: 1, borderColor: "#E5E7EB", borderRadius: 10, padding: 14, fontSize: 15, color: "#1a1a1a", backgroundColor: "#fff" },
-  passwordContainer: { flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: "#E5E7EB", borderRadius: 10, paddingHorizontal: 14, backgroundColor: "#fff" },
+  label: { fontSize: 13, fontWeight: "600", color: "#374151" },
+  input: {
+    borderWidth: 1, borderColor: "#E2D9D0", borderRadius: 10,
+    padding: 14, fontSize: 15, color: "#1a1a1a", backgroundColor: "#fff",
+  },
+  passwordContainer: {
+    flexDirection: "row", alignItems: "center",
+    borderWidth: 1, borderColor: "#E2D9D0", borderRadius: 10,
+    paddingHorizontal: 14, backgroundColor: "#fff",
+  },
   eyeBtn: { padding: 4 },
   eyeIcon: { fontSize: 18 },
   forgotBtn: { alignSelf: "flex-end" },
-  forgotText: { color: "#2563EB", fontSize: 13 },
+  forgotText: { color: "#7C5C3E", fontSize: 13 },
   errorBox: { backgroundColor: "#FEE2E2", borderRadius: 8, padding: 10 },
   errorText: { color: "#DC2626", fontSize: 13, textAlign: "center" },
-  loginBtn: { backgroundColor: "#1a1a1a", borderRadius: 12, padding: 16, alignItems: "center" },
+  loginBtn: {
+    backgroundColor: "#2C1A12", borderRadius: 12,
+    padding: 16, alignItems: "center", marginTop: 4,
+  },
   loginBtnDisabled: { backgroundColor: "#6B7280" },
   loginBtnText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
   divider: { flexDirection: "row", alignItems: "center", gap: 8 },
-  dividerLine: { flex: 1, height: 1, backgroundColor: "#E5E7EB" },
+  dividerLine: { flex: 1, height: 1, backgroundColor: "#E2D9D0" },
   dividerText: { color: "#9CA3AF", fontSize: 13 },
-  googleBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: "#2563EB", borderRadius: 12, padding: 14, gap: 8 },
+  googleBtn: {
+    flexDirection: "row", alignItems: "center", justifyContent: "center",
+    borderWidth: 1.5, borderColor: "#7C5C3E", borderRadius: 12,
+    padding: 14, gap: 8,
+  },
   googleIcon: { fontSize: 16, fontWeight: "bold", color: "#EA4335" },
-  googleText: { fontSize: 15, color: "#2563EB", fontWeight: "600" },
+  googleText: { fontSize: 15, color: "#7C5C3E", fontWeight: "600" },
   registerBtn: { alignItems: "center" },
   registerText: { fontSize: 14, color: "#6B7280" },
-  registerLink: { color: "#2563EB", fontWeight: "bold" },
-  logoutBtn: { alignItems: "center", padding: 12, borderWidth: 1, borderColor: "#EF4444", borderRadius: 12 },
+  registerLink: { color: "#7C5C3E", fontWeight: "bold" },
+  logoutBtn: {
+    alignItems: "center", padding: 12,
+    borderWidth: 1, borderColor: "#EF4444", borderRadius: 12,
+  },
   logoutText: { color: "#EF4444", fontWeight: "bold", fontSize: 15 },
 });
