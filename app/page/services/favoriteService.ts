@@ -14,7 +14,7 @@ export const getFavorites = async (): Promise<string[]> => {
 
   const q = query(
     collection(db, "favorites"),
-    where("userId", "==", userId) // ← فلتر حسب اليوزر
+    where("userId", "==", userId)
   );
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => doc.data().chaletId as string);
