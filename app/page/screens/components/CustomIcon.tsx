@@ -18,7 +18,14 @@ export const PersonIcon = () => (
     </Svg>
 );
 
-
+export const HomeIcon = ({ size = 24, color = "#000" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path
+      d="M3 10.5L12 3l9 7.5v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9z"
+      fill={color}
+    />
+  </Svg>
+);
 export const BedIcon = () => (
   <Svg width="20" height="20" viewBox="0 0 24 24">
     <Rect x="2" y="10" width="20" height="8" fill="#4B5563" />
@@ -66,5 +73,54 @@ export const ACIcon = () => (
   <Svg width="20" height="20" viewBox="0 0 24 24">
     <Circle cx="12" cy="12" r="6" stroke="#4B5563" strokeWidth="2" fill="none" />
     <Path d="M12 6v6l4 2" stroke="#4B5563" strokeWidth="2" />
+  </Svg>
+);
+export const ChaletIcon = ({ size = 24, color = "#000" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    
+    <Path
+      d="M3 11L12 4l9 7"
+      stroke={color}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+
+    <Rect
+      x="5"
+      y="11"
+      width="14"
+      height="9"
+      rx="2"
+      stroke={color}
+      strokeWidth={2}
+      fill="none"
+    />
+
+    <Rect
+      x="10"
+      y="14"
+      width="4"
+      height="6"
+      rx="1"
+      fill={color}
+    />
+
+    <Rect
+      x="7"
+      y="13"
+      width="2"
+      height="2"
+      fill={color}
+    />
+
+    <Rect
+      x="15"
+      y="13"
+      width="2"
+      height="2"
+      fill={color}
+    />
   </Svg>
 );
