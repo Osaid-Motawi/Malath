@@ -22,7 +22,6 @@ export const logoutUser = async () => {
   await signOut(auth);
 };
 
-// ─── جلب التوكن ───────────────────────────────────────────────────
 export const getUserToken = async (): Promise<string | null> => {
   const user = auth.currentUser;
   if (!user) return null;
