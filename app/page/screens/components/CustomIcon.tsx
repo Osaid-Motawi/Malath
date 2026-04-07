@@ -17,7 +17,25 @@ export const PersonIcon = () => (
         <Path d="M4 21v-1a8 8 0 0116 0v1" fill="#000000" />
     </Svg>
 );
-
+export const StarIcon = ({ size = 20, color = "#F59E0B" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path
+      d="M12 3l2.9 6 6.6.6-5 4.3 1.5 6.5L12 17l-6 3.4 1.5-6.5-5-4.3 6.6-.6L12 3z"
+      fill={color}
+    />
+  </Svg>
+);
+export const LocationIcon = ({ size = 20, color = "#4B5563" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path
+      d="M12 21s7-5.33 7-11a7 7 0 10-14 0c0 5.67 7 11 7 11z"
+      stroke={color}
+      strokeWidth="2"
+      fill="none"
+    />
+    <Circle cx="12" cy="10" r="2.5" fill={color} />
+  </Svg>
+);
 export const HomeIcon = ({ size = 24, color = "#000" }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">
     <Path
@@ -26,11 +44,18 @@ export const HomeIcon = ({ size = 24, color = "#000" }) => (
     />
   </Svg>
 );
-export const BedIcon = () => (
-  <Svg width="20" height="20" viewBox="0 0 24 24">
-    <Rect x="2" y="10" width="20" height="8" fill="#4B5563" />
-    <Rect x="2" y="6" width="6" height="4" fill="#9CA3AF" />
-    <Rect x="16" y="6" width="6" height="4" fill="#9CA3AF" />
+export const BedIcon = ({ size = 20, color = "#4B5563" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    
+    {/* قاعدة السرير */}
+    <Rect x="3" y="11" width="18" height="6" rx="2" fill={color} />
+    
+    {/* المخدة */}
+    <Rect x="5" y="8" width="5" height="3" rx="1" fill="#9CA3AF" />
+    
+    {/* المرتبة */}
+    <Rect x="10" y="9" width="9" height="2" rx="1" fill="#9CA3AF" />
+    
   </Svg>
 );
 
@@ -43,12 +68,25 @@ export const ChairIcon = () => (
   </Svg>
 );
 
-export const BathIcon = () => (
-  <Svg width="20" height="20" viewBox="0 0 24 24">
+export const BathIcon = ({ size = 20, color = "#4B5563" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    
+    {/* البانيو */}
+    <Rect x="3" y="11" width="18" height="6" rx="3" fill={color} />
+    
+    {/* الدش */}
     <Path
-      d="M3 10h18v10H3V10zm2 2v6h14v-6H5zm7-8c1.1 0 2 .9 2 2H10c0-1.1.9-2 2-2z"
-      fill="#4B5563"
+      d="M16 6a2 2 0 012 2v3"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      fill="none"
     />
+    
+    {/* المي */}
+    <Circle cx="18" cy="11" r="1" fill="#9CA3AF" />
+    <Circle cx="20" cy="12" r="1" fill="#9CA3AF" />
+    
   </Svg>
 );
 
@@ -122,5 +160,45 @@ export const ChaletIcon = ({ size = 24, color = "#000" }) => (
       height="2"
       fill={color}
     />
+  </Svg>
+);
+export const ParkingIcon = () => (
+  <Svg width="20" height="20" viewBox="0 0 24 24">
+    <Rect x="3" y="3" width="18" height="18" rx="3" stroke="#4B5563" strokeWidth="2" fill="none" />
+    <Path
+      d="M9 17V7h4a3 3 0 010 6H9"
+      stroke="#4B5563"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+  </Svg>
+);
+export const PoolIcon = () => (
+  <Svg width="20" height="20" viewBox="0 0 24 24">
+    <Path
+      d="M2 16c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"
+      stroke="#4B5563"
+      strokeWidth="2"
+      fill="none"
+      strokeLinecap="round"
+    />
+    <Path
+      d="M2 20c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"
+      stroke="#4B5563"
+      strokeWidth="2"
+      fill="none"
+      strokeLinecap="round"
+    />
+  </Svg>
+);
+export const FacilitiesIcon = ({ size = 24, color = "#4B5563" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    
+    <Rect x="3" y="3" width="18" height="18" rx="4" stroke={color} strokeWidth="2" fill="none" />
+    
+    <Path d="M7 12h10M12 7v10" stroke={color} strokeWidth="2" strokeLinecap="round" />
+
   </Svg>
 );

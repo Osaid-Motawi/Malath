@@ -1,5 +1,5 @@
 import React from "react";
-import { View, FlatList, ActivityIndicator, Text, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import ChaletCard from "../components/ChaletCard";
 import { useChalets } from "../components/ChaletContext";
 
@@ -24,7 +24,6 @@ export default function HomePage() {
         renderItem={({ item }) => (
           <ChaletCard
             chalet={item}
-            onPress={(chalet) => console.log("ضغطت على:", chalet.name)}
           />
         )}
         contentContainerStyle={{ padding: 16 }}
