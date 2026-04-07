@@ -170,7 +170,7 @@ export default function ChaletDetailsPage({ chaletId }: Props) {
         <TouchableOpacity
           style={styles.bookBtn}
           onPress={() => router.push({
-            pathname: '/Bookingpage',
+            pathname: '/booking',
             params: {
               chaletId: chalet.id,
               chaletName: chalet.name,
