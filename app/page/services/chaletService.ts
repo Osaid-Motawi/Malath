@@ -5,9 +5,30 @@ export interface Chalet {
   name: string;
   location: string;
   price: number;
-    rating?: number;
-image?: string;
-images: string[];  capacity: number;
+  rating?: number;
+  image?: string;
+  images: string[];
+  capacity: number;
+  description?: string;
+  amenities?: {
+    Kitchen?: boolean;
+    Parking?: boolean;
+    Pool?: boolean;
+    WiFi?: boolean;
+  };
+  photo?: {
+    photoA?: string;
+    photoB?: string;
+    photoC?: string;
+    photoD?: string;
+    photoE?: string;
+    photoF?: string;
+    photoG?: string;
+    photoH?: string;
+  }
+  bedrooms?: number;
+  bathrooms?: number;
+  discount?: number;
 }
 
 export const getChalets = async (): Promise<Chalet[]> => {

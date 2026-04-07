@@ -4,6 +4,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../FirebaseConfig";
 import { ChaletProvider } from "./page/screens/components/ChaletContext";
 import { ActivityIndicator, View } from "react-native";
+import { getUserToken } from "./page/services/authService";
 
 function AuthGate({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -12,18 +13,20 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       setChecking(false);
+      if (u) {
+        const token = await getUserToken();
+        console.log("✅ User Token:", token);
+      }
     });
     return unsub;
   }, []);
 
   useEffect(() => {
     if (checking) return;
-
     const inTabs = segments[0] === "(tabs)";
-
     if (!user && inTabs) {
       router.replace("/login");
     } else if (user && !inTabs) {
@@ -50,6 +53,7 @@ export default function RootLayout() {
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
          <Stack.Screen name="Bookingpage" />
+        <Stack.Screen name="chalet-details" />
       </Stack>
     </ChaletProvider>
   );
