@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useChalets } from "../components/ChaletContext";
 import ChaletCard from "../components/ChaletCard";
-import { HomeIcon, ChaletIcon } from "../components/CustomIcon";
+import { WhiteHeartIcon } from "../components/CustomIcon";
 export default function FavoritesPage() {
   const { chalets, favorites } = useChalets();
 
@@ -22,7 +22,7 @@ export default function FavoritesPage() {
         <Text style={styles.title}>المفضلة</Text>
 
         <View style={styles.empty}>
-          <Text style={styles.emptyIcon}>🤍</Text>
+          <Text style={styles.emptyIcon}><WhiteHeartIcon /></Text>
           <Text style={styles.emptyText}>لا يوجد شاليهات في المفضلة</Text>
           <Text style={styles.emptySubText}>
             اضغط على القلب لإضافة شاليه
