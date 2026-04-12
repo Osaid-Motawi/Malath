@@ -13,7 +13,6 @@ export const loginUser = async (email: string, password: string) => {
     where("password", "==", password)
   );
   const snapshot = await getDocs(q);
-
   if (snapshot.empty) throw new Error("Invalid email or password");
 
   const userDoc = snapshot.docs[0];
