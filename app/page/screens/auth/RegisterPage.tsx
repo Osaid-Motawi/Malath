@@ -7,6 +7,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { registerUser } from "../../services/authService";
 import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
+import { LogoIcon } from "../components/CustomIcon";
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
@@ -32,7 +33,7 @@ export default function RegisterPage() {
       await registerUser(fullName, email.trim(), password);
       router.replace("/(tabs)");
     } catch (e: any) {
-      setError(e.message || "Something went wrong, try again");
+      setError(e.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -41,64 +42,76 @@ export default function RegisterPage() {
   return (
     <SafeAreaView style={s.safe}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={s.container} showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={s.outer} showsVerticalScrollIndicator={false}>
+          <View style={s.card}>
 
-          <TouchableOpacity onPress={() => router.back()} style={s.backBtn}>
-            <Text style={s.backIcon}>←</Text>
-          </TouchableOpacity>
-
-          <Text style={s.welcome}>Welcome to MALATH</Text>
-          <Text style={s.title}>Create Account</Text>
-
-          <View style={s.row}>
-            <View style={{ flex: 1, gap: 6 }}>
-              <Text style={s.label}>First Name</Text>
-              <TextInput style={s.input} placeholder="Mohammed" placeholderTextColor="#aaa"
-                value={firstName} onChangeText={setFirstName} />
+            <View style={s.left}>
+              <Text style={s.welcome}>Welcome to</Text>
+              <View style={s.logoCircle}>
+                <LogoIcon />
+              </View>
+              <Text style={s.appName}>Malath</Text>
+              <Text style={s.desc}>Your trusted platform for chalet bookings across the region.</Text>
             </View>
-            <View style={{ flex: 1, gap: 6 }}>
-              <Text style={s.label}>Last Name</Text>
-              <TextInput style={s.input} placeholder="Ahmad" placeholderTextColor="#aaa"
-                value={lastName} onChangeText={setLastName} />
+
+            <View style={s.right}>
+              <Text style={s.formTitle}>Create your account</Text>
+
+              <View style={s.nameRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={s.label}>First Name</Text>
+                  <View style={s.inputRow}>
+                    <TextInput style={s.input} placeholder="First name" placeholderTextColor="#aaa"
+                      value={firstName} onChangeText={setFirstName} />
+                  </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={s.label}>Last Name</Text>
+                  <View style={s.inputRow}>
+                    <TextInput style={s.input} placeholder="Last name" placeholderTextColor="#aaa"
+                      value={lastName} onChangeText={setLastName} />
+                  </View>
+                </View>
+              </View>
+
+              <Text style={s.label}>E-mail Address</Text>
+              <View style={s.inputRow}>
+                <TextInput style={s.input} placeholder="Enter your mail" placeholderTextColor="#aaa"
+                  keyboardType="email-address" autoCapitalize="none"
+                  value={email} onChangeText={setEmail} />
+              </View>
+
+              <Text style={s.label}>Password</Text>
+              <View style={s.inputRow}>
+                <TextInput style={s.input} placeholder="Enter your password" placeholderTextColor="#aaa"
+                  secureTextEntry={!showPassword} value={password} onChangeText={setPassword} />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <EyeIcon size={18} color="#aaa" /> : <EyeOffIcon size={18} color="#aaa" />}
+                </TouchableOpacity>
+              </View>
+
+              <Text style={s.label}>Confirm Password</Text>
+              <View style={s.inputRow}>
+                <TextInput style={s.input} placeholder="Confirm your password" placeholderTextColor="#aaa"
+                  secureTextEntry={!showConfirm} value={confirmPassword} onChangeText={setConfirmPassword} />
+                <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)}>
+                  {showConfirm ? <EyeIcon size={18} color="#aaa" /> : <EyeOffIcon size={18} color="#aaa" />}
+                </TouchableOpacity>
+              </View>
+
+              {!!error && <Text style={s.error}>{error}</Text>}
+
+              <View style={s.btnRow}>
+                <TouchableOpacity style={[s.btnPrimary, loading && s.btnDisabled]} onPress={handleRegister} disabled={loading}>
+                  {loading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.btnPrimaryText}>Sign Up</Text>}
+                </TouchableOpacity>
+                <TouchableOpacity style={s.btnOutline} onPress={() => router.replace("/login")}>
+                  <Text style={s.btnOutlineText}>Sign In</Text>
+                </TouchableOpacity>
+              </View>
+
             </View>
           </View>
-
-          <Text style={s.label}>E-mail</Text>
-          <TextInput style={s.input} placeholder="Enter your email" placeholderTextColor="#aaa"
-            keyboardType="email-address" autoCapitalize="none"
-            value={email} onChangeText={setEmail} />
-
-          <Text style={s.label}>Password</Text>
-          <View style={s.passwordRow}>
-            <TextInput style={[s.input, { flex: 1, borderWidth: 0 }]} placeholder="Enter your password"
-              placeholderTextColor="#aaa" secureTextEntry={!showPassword}
-              value={password} onChangeText={setPassword} />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={s.eyeBtn}>
-              {showPassword ? <EyeIcon size={20} color="#aaa" /> : <EyeOffIcon size={20} color="#aaa" />}
-            </TouchableOpacity>
-          </View>
-          <Text style={s.hint}>At least 8 characters</Text>
-
-          <Text style={s.label}>Confirm Password</Text>
-          <View style={s.passwordRow}>
-            <TextInput style={[s.input, { flex: 1, borderWidth: 0 }]} placeholder="Confirm your password"
-              placeholderTextColor="#aaa" secureTextEntry={!showConfirm}
-              value={confirmPassword} onChangeText={setConfirmPassword} />
-            <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)} style={s.eyeBtn}>
-              {showConfirm ? <EyeIcon size={20} color="#aaa" /> : <EyeOffIcon size={20} color="#aaa" />}
-            </TouchableOpacity>
-          </View>
-
-          {!!error && <Text style={s.error}>{error}</Text>}
-
-          <TouchableOpacity style={[s.btn, loading && s.btnDisabled]} onPress={handleRegister} disabled={loading}>
-            {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Create Account</Text>}
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => router.replace("/login")}>
-            <Text style={s.link}>Already have an account? <Text style={s.linkBold}>Login</Text></Text>
-          </TouchableOpacity>
-
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -106,24 +119,31 @@ export default function RegisterPage() {
 }
 
 const s = StyleSheet.create({
-  safe:        { flex: 1, backgroundColor: "#F5F0EB" },
-  container:   { paddingHorizontal: 28, paddingTop: 12, paddingBottom: 40, gap: 12 },
-  backBtn:     { alignSelf: "flex-start", padding: 4 },
-  backIcon:    { fontSize: 22, color: "#1a1a1a" },
-  welcome:     { fontSize: 22, fontWeight: "bold", color: "#18251D", textAlign: "center" },
-  title:       { fontSize: 28, fontWeight: "bold", color: "#18251D", textAlign: "center", marginBottom: 8 },
-  row:         { flexDirection: "row", gap: 12 },
-  label:       { fontSize: 13, fontWeight: "600", color: "#374151" },
-  input:       { borderWidth: 1, borderColor: "#E2D9D0", borderRadius: 10,
-                 padding: 14, fontSize: 15, color: "#1a1a1a", backgroundColor: "#fff" },
-  passwordRow: { flexDirection: "row", alignItems: "center", borderWidth: 1,
-                 borderColor: "#E2D9D0", borderRadius: 10, paddingHorizontal: 14, backgroundColor: "#fff" },
-  eyeBtn:      { padding: 8 },
-  hint:        { fontSize: 12, color: "#7C5C3E" },
-  error:       { color: "#DC2626", fontSize: 13, textAlign: "center" },
-  btn:         { backgroundColor: "#2C1A12", borderRadius: 25, padding: 16, alignItems: "center", marginTop: 8 },
-  btnDisabled: { backgroundColor: "#6B7280" },
-  btnText:     { color: "#fff", fontSize: 16, fontWeight: "bold" },
-  link:        { fontSize: 14, color: "#6B7280", textAlign: "center" },
-  linkBold:    { color: "#7C5C3E", fontWeight: "bold" },
+  safe:           { flex: 1, backgroundColor: "#e8f0fb" },
+  outer:          { flexGrow: 1, justifyContent: "center", alignItems: "center", padding: 20 },
+  card:           { flexDirection: "row", width: "100%", borderRadius: 24,
+                    overflow: "hidden", backgroundColor: "#fff",
+                    shadowColor: "#000", shadowOpacity: 0.15, shadowRadius: 20, elevation: 10 },
+  left:           { flex: 1, backgroundColor: "#2C6FBF", padding: 24,
+                    justifyContent: "center", alignItems: "center", gap: 12 },
+  welcome:        { fontSize: 18, color: "#fff", fontWeight: "500" },
+  logoCircle:     { width: 80, height: 80, borderRadius: 40, backgroundColor: "rgba(255,255,255,0.2)",
+                    justifyContent: "center", alignItems: "center" },
+  appName:        { fontSize: 28, color: "#fff", fontWeight: "bold" },
+  desc:           { fontSize: 12, color: "rgba(255,255,255,0.8)", textAlign: "center", lineHeight: 18 },
+  right:          { flex: 1.3, padding: 24, gap: 8, justifyContent: "center" },
+  formTitle:      { fontSize: 18, fontWeight: "bold", color: "#1a1a1a", marginBottom: 4 },
+  nameRow:        { flexDirection: "row", gap: 10 },
+  label:          { fontSize: 12, fontWeight: "600", color: "#37513f", marginBottom: 2 },
+  inputRow:       { flexDirection: "row", alignItems: "center",
+                    borderBottomWidth: 1.5, borderBottomColor: "#2C6FBF",
+                    paddingBottom: 4, marginBottom: 6 },
+  input:          { flex: 1, fontSize: 13, color: "#1a1a1a", paddingVertical: 4 },
+  error:          { color: "#DC2626", fontSize: 12, textAlign: "center" },
+  btnRow:         { flexDirection: "row", gap: 12, marginTop: 8 },
+  btnPrimary:     { flex: 1, backgroundColor: "#2C6FBF", borderRadius: 20, padding: 12, alignItems: "center" },
+  btnDisabled:    { backgroundColor: "#6B7280" },
+  btnPrimaryText: { color: "#fff", fontWeight: "bold", fontSize: 14 },
+  btnOutline:     { flex: 1, borderWidth: 1.5, borderColor: "#2C6FBF", borderRadius: 20, padding: 12, alignItems: "center" },
+  btnOutlineText: { color: "#2C6FBF", fontWeight: "bold", fontSize: 14 },
 });

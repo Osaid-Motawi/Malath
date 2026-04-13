@@ -254,3 +254,32 @@ export const FacilitiesIcon = ({ size = 24, color = "#4B5563" }) => (
 
   </Svg>
 );
+export const EmailIcon = ({ size = 18, color = "#9CA3AF" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path
+      d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"
+      stroke={color} strokeWidth="2" fill="none"
+    />
+    <Path d="M22 6l-10 7L2 6" stroke={color} strokeWidth="2" fill="none" />
+  </Svg>
+);
+
+export const LockIcon = ({ size = 18, color = "#9CA3AF" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Rect x="3" y="11" width="18" height="11" rx="2" stroke={color} strokeWidth="2" fill="none" />
+    <Path d="M7 11V7a5 5 0 0110 0v4" stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
+  </Svg>
+);
+
+export const UserIcon = ({ size = 18, color = "#9CA3AF" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke={color} strokeWidth="2" fill="none" strokeLinecap="round" />
+    <Circle cx="12" cy="7" r="4" stroke={color} strokeWidth="2" fill="none" />
+  </Svg>
+);
+export const LogoIcon = () => (
+  <Svg width="60" height="60" viewBox="0 0 24 24">
+    <Circle cx="12" cy="12" r="12" fill="#fff" />
+    <Path d="M12 3C7 3 3 7 3 12s4 9 9 9 9-4 9-9-4-9-9-9zm0 4l5 8H7l5-8z" fill="#2C6FBF" />
+  </Svg>
+);
