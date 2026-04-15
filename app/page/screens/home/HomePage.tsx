@@ -1,10 +1,10 @@
 import React from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import ChaletCard from "../components/ChaletCard";
-import { useChalets } from "../components/ChaletContext";
+import { useChalet } from "../components/ChaletContext"; 
 
 export default function HomePage() {
-  const { chalets, loading } = useChalets();
+  const { chalets, loading } = useChalet();
 
   if (loading) {
     return (

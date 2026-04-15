@@ -5,37 +5,25 @@ import {
   StyleSheet, Text, TextInput, TouchableOpacity, View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { loginUser, logoutUser } from "../../services/authService";
 import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
-import { LogoIcon } from "../components/CustomIcon";
+import { useAuth } from "@/hooks/useAuth";
 
-
-export default function LoginPage() {
+  const LoginPage = () => {
+    
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const { loading, error, login, logout } = useAuth();
 
   const handleLogin = async () => {
-    setError("");
-    if (!email.trim()) { setError("Please enter your email"); return; }
-    if (!password.trim()) { setError("Please enter your password"); return; }
-    setLoading(true);
-    try {
-      await loginUser(email.trim(), password);
-      router.replace("/(tabs)");
-    } catch (e: any) {
-      setError(e.message || "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
+    await login(email, password);
   };
 
   const handleLogout = async () => {
-    await logoutUser();
-    router.replace("/");
+    await logout();
   };
+
 
   return (
     <SafeAreaView style={s.safe}>
@@ -46,7 +34,9 @@ export default function LoginPage() {
             <View style={s.left}>
               <Text style={s.welcome}>Welcome to</Text>
               <View style={s.logoCircle}>
-                <LogoIcon />
+                
+
+                
               </View>
               <Text style={s.appName}>Malath</Text>
               <Text style={s.desc}>Your trusted platform for chalet bookings across the region.</Text>
@@ -103,7 +93,7 @@ const s = StyleSheet.create({
     shadowColor: "#000", shadowOpacity: 0.15, shadowRadius: 20, elevation: 10,
   },
   left:           {
-    flex: 1, backgroundColor: "#2C6FBF", padding: 24,
+    flex: 1, backgroundColor: "#4F2396", padding: 24,
     justifyContent: "center", alignItems: "center", gap: 12,
   },
   welcome:        { fontSize: 18, color: "#fff", fontWeight: "500" },
@@ -119,16 +109,17 @@ const s = StyleSheet.create({
   label:          { fontSize: 12, fontWeight: "600", color: "#374151", marginBottom: 2 },
   inputRow:       {
     flexDirection: "row", alignItems: "center",
-    borderBottomWidth: 1.5, borderBottomColor: "#2C6FBF",
+    borderBottomWidth: 1.5, borderBottomColor: "#4F2396",
     paddingBottom: 4, marginBottom: 6,
   },
   input:          { flex: 1, fontSize: 13, color: "#1a1a1a", paddingVertical: 4 },
   error:          { color: "#DC2626", fontSize: 12, textAlign: "center" },
   btnRow:         { flexDirection: "row", gap: 12, marginTop: 8 },
-  btnPrimary:     { flex: 1, backgroundColor: "#2C6FBF", borderRadius: 20, padding: 12, alignItems: "center" },
+  btnPrimary:     { flex: 1, backgroundColor: "#4F2396", borderRadius: 20, padding: 12, alignItems: "center" },
   btnDisabled:    { backgroundColor: "#6B7280" },
   btnPrimaryText: { color: "#fff", fontWeight: "bold", fontSize: 14 },
-  btnOutline:     { flex: 1, borderWidth: 1.5, borderColor: "#2C6FBF", borderRadius: 20, padding: 12, alignItems: "center" },
-  btnOutlineText: { color: "#2C6FBF", fontWeight: "bold", fontSize: 14 },
-  logoutText:     { color: "#EF4444", fontSize: 12, textAlign: "center", marginTop: 8 },
+  btnOutline:     { flex: 1, borderWidth: 1.5, borderColor: "#4F2396", borderRadius: 20, padding: 12, alignItems: "center" },
+  btnOutlineText: { color: "#4F2396", fontWeight: "bold", fontSize: 14 },
+  logoutText:     { flex: 1, backgroundColor: "#F69D58", borderRadius: 20, padding: 12, alignItems: "center" ,color: "#fff", fontWeight: "bold", fontSize: 14, textAlign: "center", marginTop: 12 },
 });
+export default LoginPage;

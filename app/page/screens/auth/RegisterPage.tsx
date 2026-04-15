@@ -5,11 +5,11 @@ import {
   StyleSheet, Text, TextInput, TouchableOpacity, View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { registerUser } from "../../services/authService";
 import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
 import { LogoIcon } from "../components/CustomIcon";
+import { useAuth } from "@/hooks/useAuth";
 
-export default function RegisterPage() {
+const RegisterPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,28 +17,12 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const { loading, error, register } = useAuth();
 
   const handleRegister = async () => {
-    setError("");
-    if (!firstName.trim() || !lastName.trim()) { setError("Please enter your first and last name"); return; }
-    if (!email.trim()) { setError("Please enter your email"); return; }
-    if (password.length < 8) { setError("Password must be at least 8 characters"); return; }
-    if (password !== confirmPassword) { setError("Passwords do not match"); return; }
-
-    setLoading(true);
-    try {
-      const fullName = `${firstName.trim()} ${lastName.trim()}`;
-      await registerUser(fullName, email.trim(), password);
-      router.replace("/(tabs)");
-    } catch (e: any) {
-      setError(e.message || "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
+    await register(firstName, lastName, email, password, confirmPassword);
   };
-
   return (
     <SafeAreaView style={s.safe}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
@@ -48,7 +32,6 @@ export default function RegisterPage() {
             <View style={s.left}>
               <Text style={s.welcome}>Welcome to</Text>
               <View style={s.logoCircle}>
-                <LogoIcon />
               </View>
               <Text style={s.appName}>Malath</Text>
               <Text style={s.desc}>Your trusted platform for chalet bookings across the region.</Text>
@@ -105,9 +88,6 @@ export default function RegisterPage() {
                 <TouchableOpacity style={[s.btnPrimary, loading && s.btnDisabled]} onPress={handleRegister} disabled={loading}>
                   {loading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.btnPrimaryText}>Sign Up</Text>}
                 </TouchableOpacity>
-                <TouchableOpacity style={s.btnOutline} onPress={() => router.replace("/login")}>
-                  <Text style={s.btnOutlineText}>Sign In</Text>
-                </TouchableOpacity>
               </View>
 
             </View>
@@ -124,7 +104,7 @@ const s = StyleSheet.create({
   card:           { flexDirection: "row", width: "100%", borderRadius: 24,
                     overflow: "hidden", backgroundColor: "#fff",
                     shadowColor: "#000", shadowOpacity: 0.15, shadowRadius: 20, elevation: 10 },
-  left:           { flex: 1, backgroundColor: "#2C6FBF", padding: 24,
+  left:           { flex: 1, backgroundColor: "#4F2396", padding: 24,
                     justifyContent: "center", alignItems: "center", gap: 12 },
   welcome:        { fontSize: 18, color: "#fff", fontWeight: "500" },
   logoCircle:     { width: 80, height: 80, borderRadius: 40, backgroundColor: "rgba(255,255,255,0.2)",
@@ -136,14 +116,15 @@ const s = StyleSheet.create({
   nameRow:        { flexDirection: "row", gap: 10 },
   label:          { fontSize: 12, fontWeight: "600", color: "#37513f", marginBottom: 2 },
   inputRow:       { flexDirection: "row", alignItems: "center",
-                    borderBottomWidth: 1.5, borderBottomColor: "#2C6FBF",
+                    borderBottomWidth: 1.5, borderBottomColor: "#4F2396",
                     paddingBottom: 4, marginBottom: 6 },
   input:          { flex: 1, fontSize: 13, color: "#1a1a1a", paddingVertical: 4 },
   error:          { color: "#DC2626", fontSize: 12, textAlign: "center" },
   btnRow:         { flexDirection: "row", gap: 12, marginTop: 8 },
-  btnPrimary:     { flex: 1, backgroundColor: "#2C6FBF", borderRadius: 20, padding: 12, alignItems: "center" },
+  btnPrimary:     { flex: 1, backgroundColor: "#4F2396", borderRadius: 20, padding: 12, alignItems: "center" },
   btnDisabled:    { backgroundColor: "#6B7280" },
   btnPrimaryText: { color: "#fff", fontWeight: "bold", fontSize: 14 },
-  btnOutline:     { flex: 1, borderWidth: 1.5, borderColor: "#2C6FBF", borderRadius: 20, padding: 12, alignItems: "center" },
-  btnOutlineText: { color: "#2C6FBF", fontWeight: "bold", fontSize: 14 },
+  btnOutline:     { flex: 1, borderWidth: 1.5, borderColor: "#4F2396", borderRadius: 20, padding: 12, alignItems: "center" },
+  btnOutlineText: { color: "#4F2396 ", fontWeight: "bold", fontSize: 14 },
 });
+export default RegisterPage;
