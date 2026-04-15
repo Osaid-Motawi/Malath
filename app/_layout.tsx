@@ -53,6 +53,7 @@ export default function RootLayout() {
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
         <Stack.Screen name="chalet-details" />
+        <Stack.Screen name="add-edit-chalet" />
       </Stack>
     </ChaletProvider>
   );
