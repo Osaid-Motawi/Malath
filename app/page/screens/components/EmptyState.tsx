@@ -13,9 +13,9 @@ interface StateConfig {
 const STATES: Record<StateType, StateConfig> = {
   no_city: {
     icon: '🏠',
-    title: 'لا يوجد شاليهات  ',
-    subtitle:' لا توجد شاليهات مطابقة لهذا الفلتر حالياً',
-    action: 'عرض كل الشاليهات',
+    title: 'لا يوجد شاليهات',
+    subtitle: 'لا توجد شاليهات متاحة في هذه المدينة حالياً',
+    action: 'عرض كل المدن',
   },
   no_search: {
     icon: '🔍',
@@ -23,7 +23,6 @@ const STATES: Record<StateType, StateConfig> = {
     subtitle: 'جرب كلمة بحث مختلفة أو اختر مدينة أخرى',
     action: 'مسح البحث',
   },
-  
   error: {
     icon: '⚠️',
     title: 'حدث خطأ',
