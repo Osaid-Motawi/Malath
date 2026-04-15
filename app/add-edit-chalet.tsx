@@ -13,7 +13,12 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Chalet, addChalet, getMyChalets, updateChalet } from "./page/services/chaletService";
+import {
+  Chalet,
+  addChalet,
+  getChaletById,
+  updateChalet,
+} from "../app/page/services/chaletService";
 
 type FormData = {
   name: string;
@@ -35,14 +40,29 @@ type FormData = {
 };
 
 const DEFAULT_FORM: FormData = {
-  name: "", location: "", price: "", capacity: "",
-  description: "", bedrooms: "", bathrooms: "",
-  discount: "", image: "", status: "available",
-  amenities: { Kitchen: false, Parking: false, Pool: false, WiFi: false },
+  name: "",
+  location: "",
+  price: "",
+  capacity: "",
+  description: "",
+  bedrooms: "",
+  bathrooms: "",
+  discount: "",
+  image: "",
+  status: "available",
+  amenities: {
+    Kitchen: false,
+    Parking: false,
+    Pool: false,
+    WiFi: false,
+  },
 };
 
-const AMENITY_LABELS: Record<string, string> = {
-  Kitchen: "مطبخ", Parking: "موقف سيارات", Pool: "مسبح", WiFi: "واي فاي",
+const AMENITY_LABELS: Record<keyof FormData["amenities"], string> = {
+  Kitchen: "مطبخ",
+  Parking: "موقف سيارات",
+  Pool: "مسبح",
+  WiFi: "واي فاي",
 };
 
 export default function AddEditChaletScreen() {
@@ -55,12 +75,29 @@ export default function AddEditChaletScreen() {
 
   useEffect(() => {
     if (!isEdit) return;
-    getMyChalets().then((list) => {
-      const chalet = list.find((c) => c.id === chaletId);
-      if (chalet) fillForm(chalet);
-      setLoading(false);
-    });
-  }, [chaletId]);
+
+    const loadChalet = async () => {
+      try {
+        const chalet = await getChaletById(chaletId!);
+
+        if (!chalet) {
+          Alert.alert("خطأ", "الشاليه غير موجود");
+          router.back();
+          return;
+        }
+
+        fillForm(chalet);
+      } catch (error) {
+        console.error(error);
+        Alert.alert("خطأ", "فشل تحميل بيانات الشاليه");
+        router.back();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadChalet();
+  }, [chaletId, isEdit]);
 
   function fillForm(c: Chalet) {
     setForm({
@@ -90,49 +127,52 @@ export default function AddEditChaletScreen() {
   function toggleAmenity(key: keyof FormData["amenities"]) {
     setForm((prev) => ({
       ...prev,
-      amenities: { ...prev.amenities, [key]: !prev.amenities[key] },
+      amenities: {
+        ...prev.amenities,
+        [key]: !prev.amenities[key],
+      },
     }));
   }
 
   async function handleSave() {
-  if (!form.name.trim() || !form.location.trim() || !form.price || !form.capacity) {
-    Alert.alert("تنبيه", "يرجى تعبئة الحقول الإلزامية (الاسم، الموقع، السعر، السعة)");
-    return;
-  }
-
-  setSaving(true);
-  try {
-    const payload = {
-      name: form.name.trim(),
-      location: form.location.trim(),
-      price: Number(form.price),
-      capacity: Number(form.capacity),
-      description: form.description.trim(),
-      bedrooms: form.bedrooms ? Number(form.bedrooms) : undefined,
-      bathrooms: form.bathrooms ? Number(form.bathrooms) : undefined,
-      discount: form.discount ? Number(form.discount) : undefined,
-      image: form.image.trim() || undefined,
-      images: form.image.trim() ? [form.image.trim()] : [],
-      status: form.status,
-      amenities: form.amenities,
-    };
-
-    if (isEdit) {
-      await updateChalet(chaletId!, payload);
-    } else {
-      // ← شيل ownerId من هون، الـ addChalet بتحطه تلقائياً
-      await addChalet(payload as any);
+    if (!form.name.trim() || !form.location.trim() || !form.price || !form.capacity) {
+      Alert.alert("تنبيه", "يرجى تعبئة الحقول الإلزامية (الاسم، الموقع، السعر، السعة)");
+      return;
     }
 
-    Alert.alert("تم", isEdit ? "تم تعديل الشاليه" : "تمت إضافة الشاليه");
-    router.back();
-  } catch (e) {
-    console.error(e);
-    Alert.alert("خطأ", "فشل الحفظ، حاول مجدداً");
-  } finally {
-    setSaving(false);
+    setSaving(true);
+
+    try {
+      const payload = {
+        name: form.name.trim(),
+        location: form.location.trim(),
+        price: Number(form.price),
+        capacity: Number(form.capacity),
+        description: form.description.trim(),
+        bedrooms: form.bedrooms ? Number(form.bedrooms) : undefined,
+        bathrooms: form.bathrooms ? Number(form.bathrooms) : undefined,
+        discount: form.discount ? Number(form.discount) : undefined,
+        image: form.image.trim() || undefined,
+        images: form.image.trim() ? [form.image.trim()] : [],
+        status: form.status,
+        amenities: form.amenities,
+      };
+
+      if (isEdit) {
+        await updateChalet(chaletId!, payload);
+      } else {
+        await addChalet(payload);
+      }
+
+      Alert.alert("تم", isEdit ? "تم تعديل الشاليه" : "تمت إضافة الشاليه");
+      router.back();
+    } catch (e) {
+      console.error(e);
+      Alert.alert("خطأ", "فشل الحفظ، حاول مجددًا");
+    } finally {
+      setSaving(false);
+    }
   }
-}
 
   if (loading) {
     return (
@@ -148,39 +188,118 @@ export default function AddEditChaletScreen() {
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="#111827" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{isEdit ? "تعديل الشاليه" : "إضافة شاليه"}</Text>
+
+        <Text style={styles.headerTitle}>
+          {isEdit ? "تعديل الشاليه" : "إضافة شاليه"}
+        </Text>
+
         <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
         <SectionTitle title="المعلومات الأساسية" />
-        <Field label="اسم الشاليه *" placeholder="مثال: شاليه الورود" value={form.name} onChangeText={(v) => setField("name", v)} />
-        <Field label="الموقع *" placeholder="مثال: رام الله، بيرزيت" value={form.location} onChangeText={(v) => setField("location", v)} />
-        <Field label="السعر بالليلة (₪) *" placeholder="500" value={form.price} onChangeText={(v) => setField("price", v)} keyboardType="numeric" />
-        <Field label="السعة (عدد الأشخاص) *" placeholder="10" value={form.capacity} onChangeText={(v) => setField("capacity", v)} keyboardType="numeric" />
+
+        <Field
+          label="اسم الشاليه *"
+          placeholder="مثال: شاليه الورود"
+          value={form.name}
+          onChangeText={(v) => setField("name", v)}
+        />
+
+        <Field
+          label="الموقع *"
+          placeholder="مثال: رام الله، بيرزيت"
+          value={form.location}
+          onChangeText={(v) => setField("location", v)}
+        />
+
+        <Field
+          label="السعر بالليلة (₪) *"
+          placeholder="500"
+          value={form.price}
+          onChangeText={(v) => setField("price", v)}
+          keyboardType="numeric"
+        />
+
+        <Field
+          label="السعة (عدد الأشخاص) *"
+          placeholder="10"
+          value={form.capacity}
+          onChangeText={(v) => setField("capacity", v)}
+          keyboardType="numeric"
+        />
 
         <SectionTitle title="تفاصيل إضافية" />
-        <Field label="الوصف" placeholder="اكتب وصفاً مختصراً للشاليه" value={form.description} onChangeText={(v) => setField("description", v)} multiline />
+
+        <Field
+          label="الوصف"
+          placeholder="اكتب وصفاً مختصراً للشاليه"
+          value={form.description}
+          onChangeText={(v) => setField("description", v)}
+          multiline
+        />
+
         <View style={styles.row}>
-          <Field label="عدد الغرف" placeholder="3" value={form.bedrooms} onChangeText={(v) => setField("bedrooms", v)} keyboardType="numeric" flex />
-          <Field label="عدد الحمامات" placeholder="2" value={form.bathrooms} onChangeText={(v) => setField("bathrooms", v)} keyboardType="numeric" flex />
+          <Field
+            label="عدد الغرف"
+            placeholder="3"
+            value={form.bedrooms}
+            onChangeText={(v) => setField("bedrooms", v)}
+            keyboardType="numeric"
+            flex
+          />
+
+          <Field
+            label="عدد الحمامات"
+            placeholder="2"
+            value={form.bathrooms}
+            onChangeText={(v) => setField("bathrooms", v)}
+            keyboardType="numeric"
+            flex
+          />
         </View>
-        <Field label="الخصم (%)" placeholder="10" value={form.discount} onChangeText={(v) => setField("discount", v)} keyboardType="numeric" />
-        <Field label="رابط الصورة الرئيسية" placeholder="https://..." value={form.image} onChangeText={(v) => setField("image", v)} />
+
+        <Field
+          label="الخصم (%)"
+          placeholder="10"
+          value={form.discount}
+          onChangeText={(v) => setField("discount", v)}
+          keyboardType="numeric"
+        />
+
+        <Field
+          label="رابط الصورة الرئيسية"
+          placeholder="https://..."
+          value={form.image}
+          onChangeText={(v) => setField("image", v)}
+        />
 
         <SectionTitle title="المرافق" />
+
         <View style={styles.amenitiesGrid}>
           {(Object.keys(form.amenities) as (keyof FormData["amenities"])[]).map((key) => (
             <TouchableOpacity
               key={key}
-              style={[styles.amenityChip, form.amenities[key] && styles.amenityChipActive]}
+              style={[
+                styles.amenityChip,
+                form.amenities[key] && styles.amenityChipActive,
+              ]}
               onPress={() => toggleAmenity(key)}
             >
-              <Text style={[styles.amenityText, form.amenities[key] && styles.amenityTextActive]}>
+              <Text
+                style={[
+                  styles.amenityText,
+                  form.amenities[key] && styles.amenityTextActive,
+                ]}
+              >
                 {AMENITY_LABELS[key]}
               </Text>
-              {form.amenities[key] && <Ionicons name="checkmark" size={14} color="#fff" />}
+              {form.amenities[key] && (
+                <Ionicons name="checkmark" size={14} color="#fff" />
+              )}
             </TouchableOpacity>
           ))}
         </View>
@@ -191,7 +310,9 @@ export default function AddEditChaletScreen() {
             <View style={styles.statusRow}>
               <Switch
                 value={form.status === "booked"}
-                onValueChange={(v) => setField("status", v ? "booked" : "available")}
+                onValueChange={(v) =>
+                  setField("status", v ? "booked" : "available")
+                }
                 trackColor={{ false: "#86efac", true: "#FCA5A5" }}
                 thumbColor="#fff"
               />
@@ -202,14 +323,19 @@ export default function AddEditChaletScreen() {
           </>
         )}
 
-        <TouchableOpacity style={styles.saveBtn} onPress={handleSave} disabled={saving}>
+        <TouchableOpacity
+          style={styles.saveBtn}
+          onPress={handleSave}
+          disabled={saving}
+        >
           {saving ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.saveBtnText}>{isEdit ? "حفظ التعديلات" : "إضافة الشاليه"}</Text>
+            <Text style={styles.saveBtnText}>
+              {isEdit ? "حفظ التعديلات" : "إضافة الشاليه"}
+            </Text>
           )}
         </TouchableOpacity>
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -220,9 +346,17 @@ function SectionTitle({ title }: { title: string }) {
 }
 
 function Field({
-  label, placeholder, value, onChangeText, keyboardType, multiline, flex,
+  label,
+  placeholder,
+  value,
+  onChangeText,
+  keyboardType,
+  multiline,
+  flex,
 }: {
-  label: string; placeholder: string; value: string;
+  label: string;
+  placeholder: string;
+  value: string;
   onChangeText: (v: string) => void;
   keyboardType?: "default" | "numeric";
   multiline?: boolean;
@@ -247,44 +381,133 @@ function Field({
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F9FAFB" },
+
   header: {
-    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-    paddingHorizontal: 16, paddingVertical: 14,
-    backgroundColor: "#fff", borderBottomWidth: 1, borderBottomColor: "#F3F4F6",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F3F4F6",
   },
-  headerTitle: { fontSize: 17, fontWeight: "700", color: "#111827" },
-  scroll: { padding: 16, paddingBottom: 40, gap: 10 },
+
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: "#111827",
+  },
+
+  scroll: {
+    padding: 16,
+    paddingBottom: 40,
+    gap: 10,
+  },
+
   sectionTitle: {
-    fontSize: 14, fontWeight: "700", color: "#517c63",
-    marginTop: 10, marginBottom: 4, textAlign: "right",
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#517c63",
+    marginTop: 10,
+    marginBottom: 4,
+    textAlign: "right",
   },
-  row: { flexDirection: "row", gap: 10 },
-  fieldWrapper: { gap: 5 },
-  fieldLabel: { fontSize: 13, fontWeight: "600", color: "#374151", textAlign: "right" },
+
+  row: {
+    flexDirection: "row",
+    gap: 10,
+  },
+
+  fieldWrapper: {
+    gap: 5,
+  },
+
+  fieldLabel: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#374151",
+    textAlign: "right",
+  },
+
   input: {
-    backgroundColor: "#fff", borderWidth: 1, borderColor: "#E5E7EB",
-    borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10,
-    fontSize: 14, color: "#111827",
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: "#111827",
   },
-  inputMultiline: { minHeight: 90, textAlignVertical: "top" },
-  amenitiesGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+
+  inputMultiline: {
+    minHeight: 90,
+    textAlignVertical: "top",
+  },
+
+  amenitiesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+
   amenityChip: {
-    flexDirection: "row", alignItems: "center", gap: 5,
-    borderWidth: 1, borderColor: "#E5E7EB", borderRadius: 20,
-    paddingHorizontal: 14, paddingVertical: 7, backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    backgroundColor: "#fff",
   },
-  amenityChipActive: { backgroundColor: "#517c63", borderColor: "#517c63" },
-  amenityText: { fontSize: 13, color: "#374151" },
-  amenityTextActive: { color: "#fff", fontWeight: "600" },
+
+  amenityChipActive: {
+    backgroundColor: "#517c63",
+    borderColor: "#517c63",
+  },
+
+  amenityText: {
+    fontSize: 13,
+    color: "#374151",
+  },
+
+  amenityTextActive: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+
   statusRow: {
-    flexDirection: "row", alignItems: "center", justifyContent: "flex-end",
-    gap: 10, backgroundColor: "#fff", borderRadius: 12,
-    padding: 14, borderWidth: 1, borderColor: "#E5E7EB",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 10,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
   },
-  statusLabel: { fontSize: 14, fontWeight: "600", color: "#374151" },
+
+  statusLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#374151",
+  },
+
   saveBtn: {
-    backgroundColor: "#517c63", borderRadius: 12,
-    paddingVertical: 14, alignItems: "center", marginTop: 16,
+    backgroundColor: "#517c63",
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: "center",
+    marginTop: 16,
   },
-  saveBtnText: { color: "#fff", fontWeight: "700", fontSize: 16 },
+
+  saveBtnText: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 16,
+  },
 });

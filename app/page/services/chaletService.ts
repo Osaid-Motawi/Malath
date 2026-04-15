@@ -7,13 +7,16 @@ import {
   query,
   updateDoc,
   where,
+  getDoc,
 } from "firebase/firestore";
-import { auth, db } from "../../../FirebaseConfig";
+import { db } from "../../../FirebaseConfig";
+import StorageService from "./StorageService";
 
 export interface Chalet {
   id: string;
   ownerId: string;
   name: string;
+  area?: string;
   location: string;
   price: number;
   rating?: number;
@@ -28,8 +31,14 @@ export interface Chalet {
     WiFi?: boolean;
   };
   photo?: {
-    photoA?: string; photoB?: string; photoC?: string; photoD?: string;
-    photoE?: string; photoF?: string; photoG?: string; photoH?: string;
+    photoA?: string;
+    photoB?: string;
+    photoC?: string;
+    photoD?: string;
+    photoE?: string;
+    photoF?: string;
+    photoG?: string;
+    photoH?: string;
   };
   bedrooms?: number;
   bathrooms?: number;
@@ -39,30 +48,59 @@ export interface Chalet {
 
 export const getChalets = async (): Promise<Chalet[]> => {
   const snapshot = await getDocs(collection(db, "chalets"));
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Chalet[];
+  return snapshot.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+  })) as Chalet[];
 };
 
 export const getMyChalets = async (): Promise<Chalet[]> => {
-  const user = auth.currentUser;
-  if (!user) return [];
-  const q = query(collection(db, "chalets"), where("ownerId", "==", user.uid));
+  const user = await StorageService.getUser();
+  if (!user?.userId) return [];
+
+  const q = query(
+    collection(db, "chalets"),
+    where("ownerId", "==", user.userId)
+  );
+
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as Chalet[];
+
+  return snapshot.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+  })) as Chalet[];
 };
 
-export const addChalet = async (chalet: Omit<Chalet, "id">): Promise<void> => {
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not authenticated");
+export const getChaletById = async (chaletId: string): Promise<Chalet | null> => {
+  const snapshot = await getDoc(doc(db, "chalets", chaletId));
+
+  if (!snapshot.exists()) return null;
+
+  return {
+    id: snapshot.id,
+    ...snapshot.data(),
+  } as Chalet;
+};
+
+export const addChalet = async (
+  chalet: Omit<Chalet, "id" | "ownerId" | "status">
+): Promise<void> => {
+  const user = await StorageService.getUser();
+
+  if (!user?.userId) {
+    throw new Error("Not authenticated");
+  }
+
   await addDoc(collection(db, "chalets"), {
     ...chalet,
-    ownerId: user.uid,
+    ownerId: user.userId,
     status: "available",
   });
 };
 
 export const updateChalet = async (
   chaletId: string,
-  data: Partial<Omit<Chalet, "id">>
+  data: Partial<Omit<Chalet, "id" | "ownerId">>
 ): Promise<void> => {
   await updateDoc(doc(db, "chalets", chaletId), data);
 };
