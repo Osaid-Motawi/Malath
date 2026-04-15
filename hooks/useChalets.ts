@@ -1,52 +1,106 @@
-import { useState, useEffect } from 'react';
-import firestore from '@react-native-firebase/firestore';
-interface Chalet {
-  id: string;
-  name: string;
-  location: string;
-  price: number;
-  rating: number;
-  image: string;
-  bedrooms: number;
-  bathrooms: number;
-  capacity: number;
-  discount: number;
-  photo: {          
-    photoA: string;
-    photoB: string;
-    photoC: string;
-    photoD: string;
-    photoE: string;
-    photoF: string;
-    photoG: string;
-    photoH: string;
-  };
-}
-const useChalets = (selectedCity: string) => {
+import { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../FirebaseConfig";
+import { Chalet } from "../app/page/services/chaletService";
+import {
+  addFavorite,
+  getFavorites,
+  removeFavorite,
+} from "../app/page/services/favoriteService";
+import StorageService from "../app/page/services/StorageService";
+
+export const useChalets = () => {
   const [chalets, setChalets] = useState<Chalet[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-useEffect(() => {
-    setLoading(true);
+  const [selectedCity, setSelectedCity] = useState("الكل");
 
-    let query = firestore().collection('chalets');
-
-    const unsubscribe = query.onSnapshot(snapshot => {
-      let data = snapshot.docs.map(doc => ({
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "chalets"), (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as Chalet[];
 
-      if (selectedCity && selectedCity !== 'الكل') {
-        data = data.filter(c => c.location === selectedCity);
-      }
-
       setChalets(data);
-      setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [selectedCity]);
- return { chalets, cities, loading };
+  }, []);
+
+  const loadFavorites = async () => {
+    setLoading(true);
+
+    try {
+      const user = await StorageService.getUser();
+
+      if (user?.userId) {
+        const favs = await getFavorites();
+        setFavorites(favs);
+      } else {
+        setFavorites([]);
+      }
+    } catch (error) {
+      console.log("Error loading favorites:", error);
+      setFavorites([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadFavorites();
+  }, []);
+
+  const refreshFavorites = async () => {
+    await loadFavorites();
+  };
+
+  const clearFavorites = () => {
+    setFavorites([]);
+  };
+
+  const resetChaletState = () => {
+    setFavorites([]);
+    setSelectedCity("الكل");
+    setLoading(false);
+  };
+
+  const isFavorite = (chaletId: string) => {
+    return favorites.includes(chaletId);
+  };
+
+  const toggleFavorite = async (chaletId: string) => {
+    const user = await StorageService.getUser();
+
+    if (!user?.userId) {
+      console.log("No logged in user");
+      return;
+    }
+
+    if (isFavorite(chaletId)) {
+      await removeFavorite(chaletId);
+      setFavorites((prev) => prev.filter((id) => id !== chaletId));
+    } else {
+      await addFavorite(chaletId);
+      setFavorites((prev) => [...prev, chaletId]);
+    }
+  };
+
+  const filteredChalets =
+    selectedCity === "الكل" ? chalets : chalets.filter((c) => c.location === selectedCity);
+
+  return {
+    chalets,
+    favorites,
+    loading,
+    toggleFavorite,
+    isFavorite,
+    refreshFavorites,
+    clearFavorites,
+    resetChaletState,
+    selectedCity,
+    setSelectedCity,
+    filteredChalets,
+  };
 };
-export default useChalets;
