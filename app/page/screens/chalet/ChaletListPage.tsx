@@ -1,15 +1,7 @@
 import EmptyState from "../components/EmptyState";
 import ChaletCard from "../components/ChaletCard";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Chalet, getChalets } from "../../services/chaletService";
 import CityCard from "../components/CityCard";
@@ -66,13 +58,7 @@ const cityAliases: Record<string, string[]> = {
 };
 
 type OfferFilter = "all" | "offers" | "no_offers";
-
-type CapacityFilter =
-  | "all"
-  | "two"
-  | "four_six"
-  | "six_eight"
-  | "nine_plus";
+type CapacityFilter ="all" | "two" | "four_six" | "six_eight" | "nine_plus";
 
 export default function ChaletListPage() {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
@@ -114,7 +100,7 @@ export default function ChaletListPage() {
     if (selectedCity && chalets.length === 0) {
       loadChalets();
     }
-  }, [selectedCity]);
+  }, [selectedCity, chalets.length]);
 
   const filteredChalets = chalets.filter((chalet) => {
     if (!selectedCity) return false;
@@ -143,73 +129,48 @@ export default function ChaletListPage() {
     if (capacityFilter === "two") {
       return chaletCapacity === 2;
     }
-
     if (capacityFilter === "four_six") {
       return chaletCapacity >= 4 && chaletCapacity <= 6;
     }
-
     if (capacityFilter === "six_eight") {
       return chaletCapacity >= 6 && chaletCapacity <= 8;
     }
-
     if (capacityFilter === "nine_plus") {
       return chaletCapacity >= 9;
     }
-
     return true;
   });
 
-const renderCitySelection = () => {
-  return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.citiesContainer}
-    >
-      {cities.map((city, index) => (
-        <CityCard
-          key={index}
-          city={city.name}
-          image={city.image}
-          onPress={() => handleCityPress(city.name)}
-        />
-      ))}
-    </ScrollView>
-  );
-};
+  const renderCitySelection = () => {
+    return (
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.citiesContainer}>
+        <Text style={styles.title}>اختر مدينة</Text>
+        {cities.map((city) => (
+          <CityCard key={city.name} city={city.name} image={city.image} onPress={() => handleCityPress(city.name)}/>
+        ))}
+      </ScrollView>
+    );
+  };
 
   const renderCapacityFilters = () => {
-    const options: CapacityFilter[] = [
-      "all",
-      "two",
-      "four_six",
-      "six_eight",
-      "nine_plus",
-    ];
-
+    const options: CapacityFilter[] = ["all", "two", "four_six", "six_eight", "nine_plus", ];
     return (
       <View style={styles.capacitySection}>
         <Text style={styles.filterLabel}>عدد الأشخاص</Text>
-
         <View style={styles.filterRow}>
           {options.map((option) => {
             const isActive = capacityFilter === option;
-
             return (
               <TouchableOpacity
                 key={option}
                 style={[
                   styles.filterChip,
-                  isActive && styles.filterChipActive,
+                  isActive && styles.filterChipActive
                 ]}
                 onPress={() => setCapacityFilter(option)}
                 activeOpacity={0.8}
               >
-                <Text
-                  style={[
-                    styles.filterChipText,
-                    isActive && styles.filterChipTextActive,
-                  ]}
-                >
+                <Text style={[styles.filterChipText, isActive && styles.filterChipTextActive]}>
                   {option === "all"
                     ? "كل السعات"
                     : option === "two"
@@ -242,32 +203,15 @@ const renderCitySelection = () => {
             onPress={() => setOfferFilter("all")}
             activeOpacity={0.8}
           >
-            <Text
-              style={[
-                styles.filterChipText,
-                offerFilter === "all" && styles.filterChipTextActive,
-              ]}
-            >
-              الكل
-            </Text>
+            <Text style={[styles.filterChipText, offerFilter === "all" && styles.filterChipTextActive]}>الكل</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[
-              styles.filterChip,
-              offerFilter === "offers" && styles.filterChipActive,
-            ]}
+            style={[styles.filterChip,offerFilter === "offers" && styles.filterChipActive]}
             onPress={() => setOfferFilter("offers")}
             activeOpacity={0.8}
           >
-            <Text
-              style={[
-                styles.filterChipText,
-                offerFilter === "offers" && styles.filterChipTextActive,
-              ]}
-            >
-              عليها عروض
-            </Text>
+            <Text style={[styles.filterChipText,offerFilter === "offers" && styles.filterChipTextActive]}>عليها عروض</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -278,22 +222,27 @@ const renderCitySelection = () => {
             onPress={() => setOfferFilter("no_offers")}
             activeOpacity={0.8}
           >
-            <Text
-              style={[
-                styles.filterChipText,
-                offerFilter === "no_offers" && styles.filterChipTextActive,
-              ]}
-            >
-              بدون عروض
-            </Text>
+            <Text style={[styles.filterChipText,offerFilter === "no_offers" && styles.filterChipTextActive]}>بدون عروض</Text>
           </TouchableOpacity>
         </View>
 
         {renderCapacityFilters()}
 
-        <Text style={styles.resultsCount}>
-          عدد الشاليهات: {filteredChalets.length}
-        </Text>
+        <Text style={styles.resultsCount}>عدد الشاليهات: {filteredChalets.length}</Text>
+      </View>
+    );
+  };
+
+  const renderSelectedCityHeader = () => {
+    return (
+      <View>
+        <Text style={styles.title}>{`الشاليهات في ${selectedCity}`}</Text>
+
+        <TouchableOpacity onPress={handleBackToCities} style={styles.backButton} activeOpacity={0.8}>
+          <Text style={styles.backButtonText}>رجوع للمدن</Text>
+        </TouchableOpacity>
+
+        {renderFilters()}
       </View>
     );
   };
@@ -302,7 +251,7 @@ const renderCitySelection = () => {
     if (loading) {
       return (
         <View style={styles.centerBox}>
-          <ActivityIndicator size="large" color="#14532d" />
+          <ActivityIndicator size="large" color="#4F2396" />
           <Text style={styles.loadingText}>جاري تحميل الشاليهات...</Text>
         </View>
       );
@@ -310,56 +259,40 @@ const renderCitySelection = () => {
 
     if (error) {
       return (
-        <View style={styles.selectedCityContent}>
-          {renderFilters()}
-          <EmptyState type="error" onAction={loadChalets} />
-        </View>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.cardsList}>
+          {renderSelectedCityHeader()}
+          <EmptyState type="error" onAction={loadChalets}/>
+        </ScrollView>
       );
     }
 
-    return (
-      <View style={styles.selectedCityContent}>
-        {renderFilters()}
-
-        {filteredChalets.length === 0 ? (
-          <EmptyState
-            type="no_city"
-            onAction={() => {
+    if (filteredChalets.length === 0) {
+      return (
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.cardsList}>
+          {renderSelectedCityHeader()}
+          <EmptyState type="no_city" onAction={() => {
               setOfferFilter("all");
               setCapacityFilter("all");
             }}
           />
-        ) : (
-          <FlatList
-            data={filteredChalets}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <ChaletCard chalet={item} />}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.cardsList}
-          />
-        )}
-      </View>
+        </ScrollView>
+      );
+    }
+
+    return (
+      <FlatList
+        data={filteredChalets}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ChaletCard chalet={item}/>}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.cardsList}
+        ListHeaderComponent={renderSelectedCityHeader()}
+      />
     );
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>
-        {selectedCity ? `الشاليهات في ${selectedCity}` : "اختر مدينة"}
-      </Text>
-
-      {selectedCity && (
-        <TouchableOpacity
-          onPress={handleBackToCities}
-          style={styles.backButton}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.backButtonText}>رجوع للمدن</Text>
-        </TouchableOpacity>
-      )}
-
-      {!selectedCity ? renderCitySelection() : renderSelectedCityContent()}
-    </SafeAreaView>
+    <SafeAreaView style={styles.container}>{!selectedCity ? renderCitySelection() : renderSelectedCityContent()}</SafeAreaView>
   );
 }
 
@@ -370,7 +303,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
   },
-
   title: {
     fontSize: 30,
     fontWeight: "800",
@@ -378,7 +310,6 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     color: "#17131D",
   },
-
   backButton: {
     alignSelf: "flex-end",
     marginBottom: 18,
@@ -389,29 +320,20 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#4F2396",
   },
-
   backButtonText: {
     fontSize: 14,
     fontWeight: "700",
     color: "#FFFFFF",
   },
-
   citiesContainer: {
     paddingBottom: 36,
   },
-
-  selectedCityContent: {
-    flex: 1,
-  },
-
   filterSection: {
     marginBottom: 14,
   },
-
   capacitySection: {
     marginBottom: 12,
   },
-
   filterLabel: {
     textAlign: "right",
     fontSize: 15,
@@ -420,14 +342,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 4,
   },
-
   filterRow: {
     flexDirection: "row-reverse",
     flexWrap: "wrap",
     gap: 10,
     marginBottom: 12,
   },
-
   filterChip: {
     backgroundColor: "#FFFFFF",
     paddingVertical: 11,
@@ -436,22 +356,18 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#4F2396",
   },
-
   filterChipActive: {
     backgroundColor: "#4F2396",
     borderColor: "#4F2396",
   },
-
   filterChipText: {
     color: "#4F2396",
     fontSize: 14,
     fontWeight: "700",
   },
-
   filterChipTextActive: {
     color: "#FFFFFF",
   },
-
   resultsCount: {
     textAlign: "right",
     color: "#6C6C6B",
@@ -459,21 +375,18 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: "500",
   },
-
   centerBox: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-
   loadingText: {
     marginTop: 12,
     fontSize: 15,
     color: "#969496",
     fontWeight: "500",
   },
-
   cardsList: {
     paddingBottom: 24,
-  },
+  }
 });
