@@ -5,7 +5,19 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Booking, BookingStatus, getMyBookings, cancelBooking } from "../../services/bookingService";
- 
+ import { router } from "expo-router";
+import Svg, { Path } from "react-native-svg";
+const BackIcon = () => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M15 6L9 12L15 18"
+      stroke="#4F2396"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
 // ─── Status Badge ─────────────────────────────────────────────────
 const STATUS: Record<BookingStatus, { label: string; bg: string; color: string; icon: string }> = {
   pending:   { label:"قيد الانتظار", bg:"#FEF3C7", color:"#92400E", icon:"⏳" },
@@ -31,7 +43,6 @@ function formatDisplay(dateStr: string): string {
   return `${d} ${months[parseInt(m,10)-1]} ${y}`;
 }
  
-// ─── بطاقة الحجز ──────────────────────────────────────────────────
 function BookingCard({ item, onCancel }: { item: Booking; onCancel: (id: string) => void }) {
   return (
     <View style={c.card}>
@@ -76,7 +87,6 @@ function DRow({ label, value }: { label: string; value: string }) {
   );
 }
  
-// ─── MyBookingPage ─────────────────────────────────────────────────
 type Tab = "all" | BookingStatus;
  
 const TABS: { key: Tab; label: string }[] = [
@@ -132,6 +142,9 @@ export default function MyBookingPage() {
   return (
     <SafeAreaView style={p.safe}>
       <View style={p.header}>
+        <TouchableOpacity style={p.backBtn} onPress={() => router.back()}>
+  <BackIcon />
+</TouchableOpacity>
         <Text style={p.title}>حجوزاتي</Text>
         {bookings.length > 0 && (
           <View style={p.badge}>
@@ -219,4 +232,12 @@ const p = StyleSheet.create({
   emptyIco:  { fontSize:60 },
   emptyTxt:  { fontSize:20, fontWeight:"bold", color:"#374151" },
   emptySub:  { fontSize:14, color:"#9CA3AF", textAlign:"center" },
+    backBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#EDE9FE",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

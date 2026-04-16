@@ -19,7 +19,17 @@ export const CloseIcon = ({ size = 22, color = "#000" }) => (
 export const DeerIcon = ({ size = 28 }) => (
   <Text style={{ fontSize: size }}>🦌</Text>
 );
-
+const BackIcon = () => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M15 6L9 12L15 18"
+      stroke="#4F2396"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
 export const HomeIcon = ({ size = 24, color = "#000" }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">
     <Path

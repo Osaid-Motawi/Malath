@@ -5,10 +5,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { auth } from "../../../../FirebaseConfig";
+import StorageService from "../../services/StorageService";
 import { addBooking, calcNights } from "../../services/bookingService";
  
-// ─── تنسيق التاريخ للعرض ──────────────────────────────────────────
 function formatDisplay(dateStr: string): string {
   if (!dateStr) return "";
   const [y, m, d] = dateStr.split("-");
@@ -21,7 +20,6 @@ function toISO(date: Date): string {
   return date.toISOString().split("T")[0];
 }
  
-// ─── Mini Calendar ────────────────────────────────────────────────
 function MiniCalendar({
   selectedStart, selectedEnd, onSelect, minDate,
 }: {
@@ -70,7 +68,6 @@ function MiniCalendar({
         ))}
       </View>
  
-      {/* الأيام */}
       <View style={cal.grid}>
         {cells.map((day, idx) => {
           if (!day) return <View key={`e${idx}`} style={cal.cell} />;
@@ -156,41 +153,41 @@ export default function BookingPage() {
     return null;
   }
  
-  // ─── تأكيد الحجز وحفظه بـ Firebase ───────────────────────────
-  async function handleConfirm() {
-    const user = auth.currentUser;
-    if (!user) {
-      Alert.alert("تنبيه", "يجب تسجيل الدخول أولاً");
-      router.push("/login");
-      return;
-    }
-    setLoading(true);
-    try {
-      await addBooking({
-        userId:      user.uid,
-        chaletId,
-        chaletName,
-        chaletImage: chaletImage ?? "",
-        chaletPrice,
-        checkIn,
-        checkOut,
-        guests,
-        notes:       notes.trim(),
-        totalPrice,
-        nights,
-        status:      "pending",
-      });
-      Alert.alert(
-        "✅ تم الحجز بنجاح",
-        `تم إرسال طلب حجزك لـ "${chaletName}".\nسيتم مراجعته من المالك قريباً.`,
-        [{ text: "حسناً", onPress: () => router.replace("/(tabs)") }]
-      );
-    } catch {
-      Alert.alert("خطأ", "حدث خطأ أثناء الحجز، حاول مجدداً");
-    } finally {
-      setLoading(false);
-    }
+async function handleConfirm() {
+  const user = await StorageService.getUser();
+  if (!user?.userId) {
+    Alert.alert("تنبيه", "يجب تسجيل الدخول أولاً");
+    router.push("/login");
+    return;
   }
+
+  setLoading(true);
+  try {
+    await addBooking({
+      userId:      user.userId, 
+      chaletId,
+      chaletName,
+      chaletImage: chaletImage ?? "",
+      chaletPrice,
+      checkIn,
+      checkOut,
+      guests,
+      notes:       notes.trim(),
+      totalPrice,
+      nights,
+      status:      "pending",
+    });
+    Alert.alert(
+      "✅ تم الحجز بنجاح",
+      `تم إرسال طلب حجزك لـ "${chaletName}".\nسيتم مراجعته من المالك قريباً.`,
+      [{ text: "حسناً", onPress: () => router.replace("/(tabs)") }]
+    );
+  } catch {
+    Alert.alert("خطأ", "حدث خطأ أثناء الحجز، حاول مجدداً");
+  } finally {
+    setLoading(false);
+  }
+}
  
   function goSummary() {
     const err = validate();
@@ -198,9 +195,7 @@ export default function BookingPage() {
     setStep("summary");
   }
  
-  // ══════════════════════════════════════════════════════════════
-  // شاشة الملخص
-  // ══════════════════════════════════════════════════════════════
+
   if (step === "summary") {
     return (
       <SafeAreaView style={s.safe}>
@@ -255,9 +250,7 @@ export default function BookingPage() {
     );
   }
  
-  // ══════════════════════════════════════════════════════════════
-  // شاشة الفورم
-  // ══════════════════════════════════════════════════════════════
+
   return (
     <SafeAreaView style={s.safe}>
       <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false}>
@@ -271,7 +264,6 @@ export default function BookingPage() {
           <View style={{width:36}}/>
         </View>
  
-        {/* كارت الشاليه */}
         <View style={s.chaletCard}>
           {!!chaletImage
             ? <Image source={{uri: chaletImage}} style={s.chaletThumb} resizeMode="cover"/>
@@ -283,7 +275,6 @@ export default function BookingPage() {
           </View>
         </View>
  
-        {/* ── التواريخ ── */}
         <View style={s.section}>
           <Text style={s.sectionTitle}>📅 اختر التواريخ</Text>
  
@@ -315,7 +306,6 @@ export default function BookingPage() {
           )}
         </View>
  
-        {/* ── عدد الضيوف ── */}
         <View style={s.section}>
           <Text style={s.sectionTitle}>👥 عدد الضيوف</Text>
           <View style={s.guestRow}>
@@ -360,7 +350,6 @@ export default function BookingPage() {
   );
 }
  
-// ─── مكوّن صف الملخص ──────────────────────────────────────────────
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <View style={s.summaryRow}>
@@ -370,7 +359,6 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
  
-// ─── Styles ───────────────────────────────────────────────────────
 const s = StyleSheet.create({
   safe:     { flex:1, backgroundColor:"#F3F0E9" },
   scroll:   { paddingHorizontal:20, paddingBottom:40, gap:20 },
@@ -421,7 +409,6 @@ const s = StyleSheet.create({
   nextBtn:  { backgroundColor:"#31202A", borderRadius:12, padding:16, alignItems:"center" },
   nextTxt:  { color:"#fff", fontSize:16, fontWeight:"bold" },
  
-  // ملخص
   card: { backgroundColor:"#fff", borderRadius:16, padding:20, gap:10,
     shadowColor:"#000", shadowOffset:{width:0,height:1},
     shadowOpacity:0.06, shadowRadius:6, elevation:2 },
@@ -443,7 +430,6 @@ const s = StyleSheet.create({
   disabledBtn: { backgroundColor:"#9CA3AF" },
 });
  
-// ─── Calendar Styles ──────────────────────────────────────────────
 const cal = StyleSheet.create({
   box:      { backgroundColor:"#fff", borderRadius:16, padding:16, gap:8,
     shadowColor:"#000", shadowOffset:{width:0,height:1},

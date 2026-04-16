@@ -20,9 +20,7 @@ import { useAuth } from "@/hooks/useAuth";
     await login(email, password);
   };
 
-  const handleLogout = async () => {
-    await logout();
-  };
+
 
 
   return (
@@ -72,9 +70,7 @@ import { useAuth } from "@/hooks/useAuth";
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity onPress={handleLogout}>
-                <Text style={s.logoutText}>Logout</Text>
-              </TouchableOpacity>
+
 
             </View>
           </View>
@@ -83,7 +79,6 @@ import { useAuth } from "@/hooks/useAuth";
     </SafeAreaView>
   );
 }
-
 const s = StyleSheet.create({
   safe: {
     flex: 1,

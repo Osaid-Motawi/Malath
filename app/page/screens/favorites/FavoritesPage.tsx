@@ -1,9 +1,22 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet, SafeAreaView } from "react-native";
+import { router } from "expo-router";
+
+import { View, Text, FlatList, StyleSheet, SafeAreaView,  TouchableOpacity, } from "react-native";
 import ChaletCard from "../components/ChaletCard";
 import { WhiteHeartIcon } from "../components/CustomIcon";
 import { useChalet } from "../components/ChaletContext";
-
+import Svg, { Path } from "react-native-svg";
+const BackIcon = () => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M15 6L9 12L15 18"
+      stroke="#4F2396"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
 const FavoritesPage = () => {
   const { chalets, favorites } = useChalet();
 
@@ -28,6 +41,9 @@ const FavoritesPage = () => {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.header}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+            <BackIcon />
+          </TouchableOpacity>
         <Text style={styles.title}>المفضلة</Text>
 
         <View style={styles.badge}>
@@ -73,10 +89,18 @@ const styles = StyleSheet.create({
   },
   badge: {
     marginLeft: 8,
-    backgroundColor: "#EF4444",
+    backgroundColor: "#4F2396",
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 2,
+  },
+    backBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#EDE9FE",
+    justifyContent: "center",
+    alignItems: "center",
   },
   badgeText: {
     color: "#fff",
