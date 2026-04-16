@@ -63,35 +63,39 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 40,
     paddingVertical: 60,
-    backgroundColor: '#F3F0E9', 
+    backgroundColor: '#F7F7F7', // رمادي فاتح
   },
   icon: {
     fontSize: 52,
     marginBottom: 16,
+    color: '#F69D58', // برتقالي Accent
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#18251D', 
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1A1A2E', // كحلي غامق
     marginBottom: 8,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 14,
-    color: '#18251D',
-    opacity: 0.6,
+    color: '#6C6C6B', // رمادي
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 24,
   },
   btn: {
-    backgroundColor: '#31202A', 
+    backgroundColor: '#4F2396', // بنفسجي Primary
     paddingHorizontal: 28,
     paddingVertical: 12,
     borderRadius: 12,
+    shadowColor: '#4F2396',
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 3,
   },
   btnText: {
-    color: '#F3F0E9', 
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
   },
