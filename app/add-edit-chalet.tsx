@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#517c63",
+    color: "#4F2396",
     marginTop: 10,
     marginBottom: 4,
     textAlign: "right",
@@ -465,8 +465,8 @@ const styles = StyleSheet.create({
   },
 
   amenityChipActive: {
-    backgroundColor: "#517c63",
-    borderColor: "#517c63",
+    backgroundColor: "#4F2396",
+    borderColor: "#4F2396",
   },
 
   amenityText: {
@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
   },
 
   saveBtn: {
-    backgroundColor: "#517c63",
+    backgroundColor: "#4F2396",
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
