@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: "#517c63",
+    backgroundColor: "#4F2396",
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 10,
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   cardPrice: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#517c63",
+    color: "#4F2396",
   },
 
   cardActions: {
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 6,
-    backgroundColor: "#517c63",
+    backgroundColor: "#4F2396",
     borderRadius: 10,
     paddingVertical: 9,
   },
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
 
   emptyBtn: {
     marginTop: 8,
-    backgroundColor: "#517c63",
+    backgroundColor: "#4F2396",
     paddingHorizontal: 24,
     paddingVertical: 11,
     borderRadius: 12,

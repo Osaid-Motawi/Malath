@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   gray: { fontSize: 12, color: "#6B7280" },
   name: { fontSize: 15, fontWeight: "700", color: "#111827", textAlign: "right", lineHeight: 22 },
   priceRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
-  badge: { backgroundColor: "#517c63", borderRadius: 8, paddingHorizontal: 5, paddingVertical: 3 },
+  badge: { backgroundColor: "#4F2396", borderRadius: 8, paddingHorizontal: 5, paddingVertical: 3 },
   badgeText: { color: "#fff", fontSize: 11, fontWeight: "700" },
   priceRight: { flexDirection: "row", alignItems: "baseline", gap: 4 },
   oldPrice: { fontSize: 12, color: "#9CA3AF", textDecorationLine: "line-through" },
