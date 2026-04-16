@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ChaletCard from "../components/ChaletCard";
-import { useChalets } from "../components/ChaletContext";
+import { useChalet } from "../components/ChaletContext";
 import ChaletSections from "../components/ChaletSections";
 import HeroFadeSlider from "../components/HeroFadeSlider";
 
@@ -45,7 +45,7 @@ function FullView({ title, data, onBack }: any) {
 //  HomePage Component
 export default function HomePage() {
   const insets = useSafeAreaInsets();
-  const { chalets, loading } = useChalets();
+  const { chalets, loading } = useChalet();
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const [searchQuery, setSearchQuery] = useState("");
