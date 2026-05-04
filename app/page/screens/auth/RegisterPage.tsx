@@ -31,10 +31,11 @@ const RegisterPage = () => {
 
             <View style={s.left}>
               <Text style={s.welcome}>Welcome to</Text>
+              <Text style={s.appName}>Malath</Text>
+
               <View style={s.logoCircle}>
               </View>
-              <Text style={s.appName}>Malath</Text>
-              <Text style={s.desc}>Your trusted platform for chalet bookings across the region.</Text>
+              <Text style={s.desc}>Your trusted platform for chalet bookings across the region</Text>
             </View>
 
             <View style={s.right}>
@@ -107,7 +108,7 @@ const s = StyleSheet.create({
     padding: 20,
   },
   card: {
-    flexDirection: "row",
+    flexDirection: "column",
     width: "100%",
     borderRadius: 24,
     overflow: "hidden",
@@ -120,7 +121,6 @@ const s = StyleSheet.create({
   left: {
     flex: 1,
     backgroundColor: "#4F2396",
-    padding: 24,
     justifyContent: "center",
     alignItems: "center",
     gap: 12,
@@ -146,13 +146,16 @@ const s = StyleSheet.create({
     padding: 24,
     gap: 8,
     justifyContent: "center",
+      paddingBottom: 50, 
+
   },
-  formTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-    marginBottom: 4,
-  },
+formTitle: {
+  fontSize: 18,
+  fontWeight: "bold",
+  color: "#1a1a1a",
+  marginBottom: 10,
+  marginTop: 20, 
+},
   nameRow: { flexDirection: "row", gap: 10 },
   label: {
     fontSize: 12,

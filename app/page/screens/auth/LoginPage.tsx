@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -6,7 +7,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
-import { useAuth } from "@/hooks/useAuth";
 
   const LoginPage = () => {
     
@@ -31,12 +31,11 @@ import { useAuth } from "@/hooks/useAuth";
 
             <View style={s.left}>
               <Text style={s.welcome}>Welcome to</Text>
-              <View style={s.logoCircle}>
-                
-
-                
-              </View>
               <Text style={s.appName}>Malath</Text>
+
+              <View style={s.logoCircle}>
+              
+              </View>
               <Text style={s.desc}>Your trusted platform for chalet bookings across the region.</Text>
             </View>
 
@@ -91,7 +90,7 @@ const s = StyleSheet.create({
     padding: 20,
   },
   card: {
-    flexDirection: "row",
+    flexDirection: "column",
     width: "100%",
     borderRadius: 24,
     overflow: "hidden",
@@ -144,6 +143,7 @@ const s = StyleSheet.create({
     fontWeight: "bold",
     color: "#1a1a1a",
     marginBottom: 4,
+    
   },
   label: {
     fontSize: 12,
