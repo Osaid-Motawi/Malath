@@ -13,14 +13,14 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { askMalathAI } from "../../services/aiService";
-import { useChalets } from "../components/ChaletContext";
+import { useChalet } from "../components/ChaletContext";
 import { DeerIcon } from "../components/CustomIcon";
 
 type Message = { role: "user" | "assistant"; content: string };
 
 export default function MalathChat() {
   const insets = useSafeAreaInsets();
-  const { chalets } = useChalets();
+  const { chalets } = useChalet();
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 

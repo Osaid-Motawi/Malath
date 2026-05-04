@@ -80,6 +80,17 @@ export default function ProfilePage() {
           <Text style={styles.menuText}>My Bookings</Text>
         </TouchableOpacity>
 
+
+        {user?.role === "owner" && (
+  <TouchableOpacity
+    style={styles.menuItem}
+    onPress={() => router.push("/ownerdashboard")}
+  >
+    <Ionicons name="speedometer-outline" size={20} color="#4F2396" />
+    <Text style={styles.menuText}>Owner Dashboard</Text>
+  </TouchableOpacity>
+)}
+
       </View>
 
       <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>

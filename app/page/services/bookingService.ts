@@ -1,12 +1,12 @@
 import {
   addDoc, collection, getDocs, query, where,
-  Timestamp, doc, updateDoc,
+  Timestamp, doc, updateDoc,  deleteDoc,
+
 } from "firebase/firestore";
 import { db } from "../../../FirebaseConfig";
 import StorageService from "./StorageService"; 
 
-export type BookingStatus = "pending" | "confirmed" | "cancelled" | "completed";
-
+export type BookingStatus = "pending" | "confirmed" | "rejected";
 export interface Booking {
   id: string;
   userId: string;
@@ -54,6 +54,6 @@ export const updateBookingStatus = async (bookingId: string, status: BookingStat
   await updateDoc(doc(db, "bookings", bookingId), { status });
 };
 
-export const cancelBooking = async (bookingId: string): Promise<void> => {
-  await updateBookingStatus(bookingId, "cancelled");
+export const deleteBooking = async (bookingId: string): Promise<void> => {
+  await deleteDoc(doc(db, "bookings", bookingId));
 };

@@ -12,9 +12,12 @@ import {
 import { db } from "../../../FirebaseConfig";
 import StorageService from "./StorageService";
 
+export type ChaletStatus = "available" | "booked";
+export type ChaletApprovalStatus = "pending" | "approved" | "rejected";
+
 export interface Chalet {
   id: string;
-  ownerId: string;
+  ownerId?: string;
   name: string;
   area?: string;
   location: string;
@@ -43,11 +46,18 @@ export interface Chalet {
   bedrooms?: number;
   bathrooms?: number;
   discount?: number;
-  status?: "available" | "booked";
+  status?: ChaletStatus;
+  approvalStatus?: ChaletApprovalStatus;
 }
 
 export const getChalets = async (): Promise<Chalet[]> => {
-  const snapshot = await getDocs(collection(db, "chalets"));
+  const q = query(
+    collection(db, "chalets"),
+    where("approvalStatus", "==", "approved")
+  );
+
+  const snapshot = await getDocs(q);
+
   return snapshot.docs.map((d) => ({
     id: d.id,
     ...d.data(),
@@ -83,7 +93,7 @@ export const getChaletById = async (chaletId: string): Promise<Chalet | null> =>
 };
 
 export const addChalet = async (
-  chalet: Omit<Chalet, "id" | "ownerId" | "status">
+  chalet: Omit<Chalet, "id" | "ownerId" | "status" | "approvalStatus">
 ): Promise<void> => {
   const user = await StorageService.getUser();
 
@@ -95,6 +105,7 @@ export const addChalet = async (
     ...chalet,
     ownerId: user.userId,
     status: "available",
+    approvalStatus: "pending",
   });
 };
 
