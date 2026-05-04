@@ -1,101 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db } from '../../../../FirebaseConfig';
 import { router } from 'expo-router';
-import { BedIcon, BathIcon, WifiIcon, KitchenIcon, ChairIcon, PersonIcon, PoolIcon, ParkingIcon, FacilitiesIcon, StarIcon, LocationIcon, HeartIcon } from '../components/CustomIcon';
+import { doc, onSnapshot } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { db } from '../../../../FirebaseConfig';
 import { Chalet } from '../../services/chaletService';
-
-const SpecItem = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) => (
-  <View style={styles.specItem}>
-    <View style={styles.specIconWrap}>{icon}</View>
-    <Text style={styles.specValue}>{value}</Text>
-    <Text style={styles.specLabel}>{label}</Text>
-  </View>
-);
-
-const AmenityItem = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
-  <View style={styles.amenityChip}>
-    {icon}
-    <Text style={styles.amenityLabel}>{label}</Text>
-  </View>
-);
-
-const AccordionItem = ({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <View style={styles.accordionItem}>
-      <TouchableOpacity style={styles.accordionHeader} onPress={() => setOpen(!open)}>
-        <View style={styles.accIconWrap}>{icon}</View>
-        <Text style={styles.accordionTitle}>{title}</Text>
-        <Text style={styles.accordionArrow}>{open ? '∧' : '∨'}</Text>
-      </TouchableOpacity>
-      {open && <View style={styles.accordionBody}>{children}</View>}
-    </View>
-  );
-};
-
-interface Props {
-  chaletId: string;
-}
-
+import AccordionItem from '../components/AccordionItem';
+import { BathIcon, BedIcon, ChairIcon, FacilitiesIcon, HeartIcon, KitchenIcon, LocationIcon, ParkingIcon, PersonIcon, PoolIcon, StarIcon, WifiIcon } from '../components/CustomIcon';
+import FeatureItem from '../components/FeatureItem';
+import Description from '../components/Description';
+interface Props {chaletId: string;}
 export default function ChaletDetailsPage({ chaletId }: Props) {
   const [chalet, setChalet] = useState<Chalet | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('المواصفات');
   const [expanded, setExpanded] = useState(false);
   const [favorited, setFavorited] = useState(false);
-
   useEffect(() => {
     const ref = doc(db, 'chalets', chaletId);
     const unsubscribe = onSnapshot(ref, (snap) => {
       if (snap.exists()) {
         setChalet({ id: snap.id, ...snap.data() } as Chalet);
       }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, [chaletId]);
-
+      setLoading(false);});
+    return () => unsubscribe();}, [chaletId]);
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#31202A" />
-      </View>
-    );
-  }
-
+      </View>);}
   if (!chalet) {
     return (
       <View style={styles.loadingContainer}>
         <Text>الشاليه غير موجود</Text>
       </View>
-    );
-  }
-
-  const photos = [
-    chalet.photo?.photoA,
-    chalet.photo?.photoB,
-    chalet.photo?.photoC,
-    chalet.photo?.photoD,
-    chalet.photo?.photoE,
-    chalet.photo?.photoF,
-    chalet.photo?.photoG,
-    chalet.photo?.photoH,
-  ].filter((p): p is string => !!p && p.trim() !== '');
-
+    );}
+ const photos = Array.from({ length: 8 }, (_, i) => {
+  const key = `photo${String.fromCharCode(65 + i)}`; 
+  return chalet.photo?.[key as keyof typeof chalet.photo];
+}).filter((p): p is string => !!p && p.trim() !== '');
   const renderPhotoGrid = () => {
-    // دايماً 8 خانات، الفاضية رمادية
     const slots = Array.from({ length: 8 }, (_, i) => photos[i] ?? null);
 
     const renderSlot = (index: number) => (
       slots[index] ? (
-        <Image key={index} source={{ uri: slots[index]! }} style={styles.gridSmall} resizeMode="cover" />
-      ) : (
-        <View key={index} style={[styles.gridSmall, { backgroundColor: '#D9D9D9' }]} />
-      )
-    );
-
+        <Image key={index} source={{ uri: slots[index]! }} style={styles.gridSmall} resizeMode="cover" />) : (
+        <View key={index} style={[styles.gridSmall, { backgroundColor: '#D9D9D9' }]} />));
     return (
       <View style={styles.photoWrapper}>
         <View style={styles.gridContainer}>
@@ -104,24 +53,14 @@ export default function ChaletDetailsPage({ chaletId }: Props) {
           <View style={styles.gridCol}>{renderSlot(4)}{renderSlot(5)}</View>
           <View style={styles.gridCol}>{renderSlot(6)}{renderSlot(7)}</View>
         </View>
-
-        {/* Back Button فوق الصور */}
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
           <Text style={styles.backIcon}>←</Text>
         </TouchableOpacity>
-      </View>
-    );
-  };
-
+      </View>);};
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-
-      {/* Photo Grid + Back Button */}
       {renderPhotoGrid()}
-
       <View style={styles.infoContainer}>
-
-        {/* Name & Heart & Discount */}
         <View style={styles.nameRow}>
           <Text style={styles.name}>{chalet.name}</Text>
           <View style={styles.nameActions}>
@@ -132,11 +71,7 @@ export default function ChaletDetailsPage({ chaletId }: Props) {
               <View style={styles.discountBadge}>
                 <Text style={styles.discountText}>خصم {chalet.discount}%</Text>
               </View>
-            )}
-          </View>
-        </View>
-
-        {/* Rating & Location */}
+            )}</View></View>
         <View style={styles.metaRow}>
           <View style={styles.ratingPill}>
             <StarIcon />
@@ -147,58 +82,39 @@ export default function ChaletDetailsPage({ chaletId }: Props) {
             <Text style={styles.locationText}>{chalet.location}</Text>
           </View>
         </View>
-
-        {/* Description */}
-        <View style={styles.descCard}>
-          <Text style={styles.descTitle}>الوصف</Text>
-          <Text style={styles.descText} numberOfLines={expanded ? undefined : 3}>
-            {chalet.description}
-          </Text>
-          <TouchableOpacity onPress={() => setExpanded(!expanded)}>
-            <Text style={styles.readMore}>{expanded ? '‹ أقل' : '... المزيد ›'}</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Tabs */}
+        <Description description={chalet.description} />
         <View style={styles.tabsRow}>
           {['المواصفات', 'المرافق', 'الشروط'].map(tab => (
             <TouchableOpacity
               key={tab}
               style={[styles.tab, activeTab === tab && styles.tabActive]}
-              onPress={() => setActiveTab(tab)}
-            >
+              onPress={() => setActiveTab(tab)}>
               <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>{tab}</Text>
-            </TouchableOpacity>
-          ))}
+            </TouchableOpacity>))}
         </View>
-
-        {/* Specs */}
         {activeTab === 'المواصفات' && (
           <View style={styles.specsContainer}>
-            <SpecItem icon={<BedIcon />} label="غرف" value={chalet.bedrooms ?? 0} />
-            <SpecItem icon={<BathIcon />} label="حمامات" value={chalet.bathrooms ?? 0} />
-            <SpecItem icon={<PersonIcon />} label="أشخاص" value={chalet.capacity} />
-          </View>
-        )}
-
-        {/* Amenities */}
+            <FeatureItem icon={<BedIcon />} label="غرف" value={chalet.bedrooms} />
+            <FeatureItem icon={<BathIcon />} label="حمامات" value={chalet.bathrooms} />
+            <FeatureItem icon={<PersonIcon />} label="أشخاص" value={chalet.capacity} />
+          </View>)}
         {activeTab === 'المرافق' && (
           <View style={styles.amenitiesContainer}>
             <AccordionItem title="الجلسات" icon={<ChairIcon />}>
-              <AmenityItem icon={<ChairIcon />} label="صالة جلوس مجهزة" />
+            <FeatureItem icon={<WifiIcon />} label="WiFi" />
+            <FeatureItem icon={<PoolIcon />} label="مسبح" />
+            <FeatureItem icon={<ParkingIcon />} label="موقف سيارات" />
             </AccordionItem>
+
             <AccordionItem title="المرافق" icon={<FacilitiesIcon />}>
-              {chalet.amenities?.WiFi && <AmenityItem icon={<WifiIcon />} label="WiFi" />}
-              {chalet.amenities?.Pool && <AmenityItem icon={<PoolIcon />} label="مسبح" />}
-              {chalet.amenities?.Parking && <AmenityItem icon={<ParkingIcon />} label="موقف سيارات" />}
+              {chalet.amenities?.WiFi && <FeatureItem icon={<WifiIcon />} label="WiFi" />}
+              {chalet.amenities?.Pool && <FeatureItem icon={<PoolIcon />} label="مسبح" />}
+              {chalet.amenities?.Parking && <FeatureItem icon={<ParkingIcon />} label="موقف سيارات" />}
             </AccordionItem>
             <AccordionItem title="المطبخ" icon={<KitchenIcon />}>
-              {chalet.amenities?.Kitchen && <AmenityItem icon={<KitchenIcon />} label="مطبخ كامل" />}
+              {chalet.amenities?.Kitchen && <FeatureItem icon={<KitchenIcon />} label="مطبخ كامل" />}
             </AccordionItem>
-          </View>
-        )}
-
-        {/* Conditions */}
+          </View>)}
         {activeTab === 'الشروط' && (
           <View style={styles.conditionsContainer}>
             <View style={styles.conditionCard}>
@@ -210,12 +126,8 @@ export default function ChaletDetailsPage({ chaletId }: Props) {
             <View style={styles.conditionCard}>
               <Text style={styles.conditionText}>💳 الدفع مسبقاً</Text>
             </View>
-          </View>
-        )}
-
+          </View>)}
       </View>
-
-      {/* Booking Bar */}
       <View style={styles.bookingBar}>
         <View>
           <Text style={styles.bookingPrice}>₪{chalet.price}</Text>
@@ -231,22 +143,14 @@ export default function ChaletDetailsPage({ chaletId }: Props) {
               chaletImage: chalet.image ?? '',
               chaletPrice: chalet.price,
               capacity: chalet.capacity,
-            },
-          })}
-        >
+            },})}>
           <Text style={styles.bookBtnText}>احجز الآن</Text>
         </TouchableOpacity>
-      </View>
-
-    </ScrollView>
-  );
-}
+        </View></ScrollView>);}
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F7F7F7' },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F7F7F7' },
-
   photoWrapper: { position: 'relative' },
-
   backBtn: {
     position: 'absolute',
     top: 16,
@@ -258,50 +162,38 @@ const styles = StyleSheet.create({
     height: 36,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  backIcon: { fontSize: 20, color: '#1A1A2E' },
-
+  },backIcon: { fontSize: 20, color: '#1A1A2E' },
   gridContainer: { flexDirection: 'row', height: 260, gap: 3, overflow: 'hidden' },
   gridCol: { flex: 1, gap: 3, height: 260 },
   gridSmall: { flex: 1, width: '100%' },
-
   infoContainer: { padding: 16, paddingBottom: 110 },
-
   nameRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     marginBottom: 10,
-  },
-  name: {
+  },name: {
     fontSize: 20,
     fontWeight: '700',
     color: '#1A1A2E',
     flex: 1,
     lineHeight: 26,
-  },
-  nameActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-
+  },nameActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   discountBadge: {
     backgroundColor: '#F69D58',
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 20,
-  },
-  discountText: {
+  },discountText: {
     color: '#fff',
     fontSize: 12,
     fontWeight: '700',
-  },
-
-  metaRow: {
+  },metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
     marginBottom: 16,
-  },
-
-  ratingPill: {
+  },ratingPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
@@ -311,51 +203,18 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderWidth: 1,
     borderColor: '#EEEEEE',
-  },
-  ratingNum: {
+  },ratingNum: {
     fontSize: 13,
     fontWeight: '700',
     color: '#1A1A2E',
-  },
-
-  locationPill: {
+  },locationPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-  },
-  locationText: {
+  },locationText: {
     fontSize: 12,
     color: '#6C6C6B',
-  },
-
-  descCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
-  },
-  descTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#1A1A2E',
-    marginBottom: 8,
-  },
-  descText: {
-    fontSize: 13,
-    color: '#6C6C6B',
-    lineHeight: 22,
-    textAlign: 'right',
-  },
-  readMore: {
-    fontSize: 12,
-    color: '#4F2396',
-    fontWeight: '700',
-    marginTop: 6,
-  },
-
-  tabsRow: {
+  },tabsRow: {
     flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 14,
@@ -363,40 +222,24 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 1,
     borderColor: '#EEEEEE',
-  },
-  tab: {
+  },tab: {
     flex: 1,
     paddingVertical: 9,
     alignItems: 'center',
     borderRadius: 10,
-  },
-  tabActive: {
+  },tabActive: {
     backgroundColor: '#4F2396',
-  },
-  tabText: {
+  },tabText: {
     fontSize: 13,
     color: '#969496',
-  },
-  tabTextActive: {
+  },tabTextActive: {
     color: '#fff',
     fontWeight: '600',
-  },
-
-  specsContainer: {
+  },specsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     gap: 8,
-  },
-  specItem: {
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 14,
-    padding: 16,
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
-  },
-  specIconWrap: {
+  },specIconWrap: {
     width: 36,
     height: 36,
     backgroundColor: '#F7F7F7',
@@ -404,71 +247,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 6,
-  },
-  specValue: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1A1A2E',
-    marginTop: 2,
-  },
-  specLabel: {
-    fontSize: 11,
-    color: '#969496',
-    marginTop: 2,
-  },
-
-  amenitiesContainer: { gap: 0 },
-
-  accordionItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE',
-  },
-  accordionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    gap: 10,
-  },
-  accIconWrap: {
-    width: 34,
-    height: 34,
-    backgroundColor: '#F7F7F7',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  accordionTitle: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1A1A2E',
-    textAlign: 'right',
-  },
-  accordionArrow: {
-    fontSize: 12,
-    color: '#969496',
-  },
-  accordionBody: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    paddingBottom: 14,
-  },
-
-  amenityChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#F7F7F7',
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-  },
-  amenityLabel: {
-    fontSize: 12,
-    color: '#1A1A2E',
-  },
-
+  },amenitiesContainer: { gap: 0 },
   conditionsContainer: { gap: 10 },
   conditionCard: {
     backgroundColor: '#fff',
@@ -476,14 +255,11 @@ const styles = StyleSheet.create({
     padding: 14,
     borderWidth: 1,
     borderColor: '#EEEEEE',
-  },
-  conditionText: {
+  },conditionText: {
     fontSize: 13,
     color: '#1A1A2E',
     lineHeight: 22,
-  },
-
-  bookingBar: {
+  },bookingBar: {
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -496,28 +272,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1,
     borderTopColor: '#EEEEEE',
-  },
-
-  bookingPrice: {
+  },bookingPrice: {
     fontSize: 20,
     fontWeight: '800',
     color: '#1A1A2E',
-  },
-  bookingNight: {
+  },bookingNight: {
     fontSize: 11,
     color: '#6C6C6B',
     marginTop: 2,
-  },
-
-  bookBtn: {
+  },bookBtn: {
     backgroundColor: '#4F2396',
     paddingHorizontal: 30,
     paddingVertical: 14,
     borderRadius: 14,
-  },
-  bookBtnText: {
+  },bookBtnText: {
     color: '#fff',
     fontSize: 15,
-    fontWeight: '700',
-  },
-});
+    fontWeight: '700',},});

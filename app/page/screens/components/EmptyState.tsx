@@ -1,15 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-
 type StateType = 'no_city' | 'no_search' | 'error'|'loading_failed';
-
 interface StateConfig {
   icon: string;
   title: string;
   subtitle: string;
-  action: string;
-}
-
+  action: string;}
 const STATES: Record<StateType, StateConfig> = {
   no_city: {
     icon: '🏠',
@@ -33,16 +29,12 @@ const STATES: Record<StateType, StateConfig> = {
     icon: '📡',
     title: 'لا يوجد اتصال',
     subtitle: 'تحقق من الإنترنت وحاول مجدداً',
-    action: 'إعادة المحاولة',
-  },
-};
+    action: 'إعادة المحاولة',},};
 interface EmptyStateProps {
   type?: StateType;
-  onAction?: () => void;
-}
+  onAction?: () => void;}
 const EmptyState = ({ type = 'no_city', onAction }: EmptyStateProps) => {
   const state = STATES[type];
-
   return (
     <View style={styles.container}>
       <Text style={styles.icon}>{state.icon}</Text>
@@ -51,11 +43,8 @@ const EmptyState = ({ type = 'no_city', onAction }: EmptyStateProps) => {
       {onAction && (
         <TouchableOpacity style={styles.btn} onPress={onAction}>
           <Text style={styles.btnText}>{state.action}</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-};
+        </TouchableOpacity>)}
+    </View>);};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -63,29 +52,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 40,
     paddingVertical: 60,
-    backgroundColor: '#F7F7F7', // رمادي فاتح
-  },
-  icon: {
+    backgroundColor: '#F7F7F7',
+  },icon: {
     fontSize: 52,
     marginBottom: 16,
-    color: '#F69D58', // برتقالي Accent
-  },
-  title: {
+    color: '#F69D58', 
+  },title: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1A1A2E', // كحلي غامق
+    color: '#1A1A2E',
     marginBottom: 8,
     textAlign: 'center',
-  },
-  subtitle: {
+  },subtitle: {
     fontSize: 14,
-    color: '#6C6C6B', // رمادي
+    color: '#6C6C6B', 
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 24,
-  },
-  btn: {
-    backgroundColor: '#4F2396', // بنفسجي Primary
+  },btn: {backgroundColor: '#4F2396', 
     paddingHorizontal: 28,
     paddingVertical: 12,
     borderRadius: 12,
@@ -93,12 +77,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 3,
-  },
-  btnText: {
+  },btnText: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: '600',
-  },
-});
-
+    fontWeight: '600',},});
 export default EmptyState;
