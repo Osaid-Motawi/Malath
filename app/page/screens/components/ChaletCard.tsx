@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Chalet } from "../../services/chaletService";
-import { useChalets } from "./ChaletContext";
+import { useChalet } from "../components/ChaletContext";
 import { HeartIcon, PersonIcon } from "./CustomIcon";
 
 interface Props {
@@ -11,12 +11,14 @@ interface Props {
   cardWidth?: number;
 }
 
-function ChaletCard({ chalet, onPress, cardWidth }: Props) {
-  const { toggleFavorite, isFavorite } = useChalets();
+const ChaletCard = ({ chalet, onPress }: Props) => {
+  
+  const { toggleFavorite, isFavorite } = useChalet();
 
   const image = chalet.image;
   const discount = chalet.discount ?? 0;
-  const originalPrice = discount > 0 ? Math.round(chalet.price / (1 - discount / 100)) : null;
+  const originalPrice =
+  discount > 0 ? Math.round(chalet.price / (1 - discount / 100)) : null;
 
   function handlePress() {
     if (onPress) {
@@ -42,7 +44,10 @@ function ChaletCard({ chalet, onPress, cardWidth }: Props) {
           <View style={{ width: "100%", aspectRatio: 4 / 3, backgroundColor: "#e5e7eb" }} />
         )}
 
-        <TouchableOpacity style={styles.heartBtn} onPress={() => toggleFavorite(chalet.id)}>
+        <TouchableOpacity
+          style={styles.heartBtn}
+          onPress={() => toggleFavorite(chalet.id)}
+        >
           <HeartIcon filled={isFavorite(chalet.id)} />
         </TouchableOpacity>
       </View>
@@ -53,6 +58,7 @@ function ChaletCard({ chalet, onPress, cardWidth }: Props) {
             <PersonIcon />
             <Text style={styles.capacityText}>{chalet.capacity}</Text>
           </View>
+
           <View style={styles.ratingRow}>
             <Text style={styles.gray}>تقييم</Text>
             <Text style={styles.gray}>{chalet.rating ?? 0}</Text>
@@ -60,7 +66,10 @@ function ChaletCard({ chalet, onPress, cardWidth }: Props) {
           </View>
         </View>
 
-        <Text style={styles.name} numberOfLines={2}>{chalet.name}</Text>
+        <Text style={styles.name} numberOfLines={2}>
+          {chalet.name}
+        </Text>
+
         <Text style={[styles.gray, { textAlign: "right" }]}>{chalet.location}</Text>
 
         <View style={styles.priceRow}>
@@ -71,12 +80,11 @@ function ChaletCard({ chalet, onPress, cardWidth }: Props) {
           ) : (
             <View />
           )}
+
           <View style={styles.priceRight}>
             <Text style={styles.gray}>/ليلة</Text>
             <Text style={styles.price}>{chalet.price} ₪</Text>
-            {originalPrice && (
-              <Text style={styles.oldPrice}>{originalPrice}</Text>
-            )}
+            {originalPrice && <Text style={styles.oldPrice}>{originalPrice}</Text>}
           </View>
         </View>
       </View>
@@ -102,7 +110,7 @@ const styles = StyleSheet.create({
   gray: { fontSize: 12, color: "#6B7280" },
   name: { fontSize: 15, fontWeight: "700", color: "#111827", textAlign: "right", lineHeight: 22 },
   priceRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
-  badge: { backgroundColor: "#517c63", borderRadius: 8, paddingHorizontal: 5, paddingVertical: 3 },
+  badge: { backgroundColor: "#4F2396", borderRadius: 8, paddingHorizontal: 5, paddingVertical: 3 },
   badgeText: { color: "#fff", fontSize: 11, fontWeight: "700" },
   priceRight: { flexDirection: "row", alignItems: "baseline", gap: 4 },
   oldPrice: { fontSize: 12, color: "#9CA3AF", textDecorationLine: "line-through" },

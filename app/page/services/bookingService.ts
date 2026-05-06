@@ -1,14 +1,9 @@
 import {
-  addDoc,
-  collection,
-  getDocs,
-  query,
-  where,
-  Timestamp,
-  doc,
-  updateDoc,
+  addDoc, collection, getDocs, query, where,
+  Timestamp, doc, updateDoc,
 } from "firebase/firestore";
-import { db, auth } from "../../../FirebaseConfig";
+import { db } from "../../../FirebaseConfig";
+import StorageService from "./StorageService"; 
 
 export type BookingStatus = "pending" | "confirmed" | "cancelled" | "completed";
 
@@ -19,8 +14,8 @@ export interface Booking {
   chaletName: string;
   chaletImage: string;
   chaletPrice: number;
-  checkIn: string;   // "YYYY-MM-DD"
-  checkOut: string;  // "YYYY-MM-DD"
+  checkIn: string;
+  checkOut: string;
   guests: number;
   notes: string;
   totalPrice: number;
@@ -31,18 +26,13 @@ export interface Booking {
 
 export type NewBooking = Omit<Booking, "id" | "createdAt">;
 
-// ─── حساب عدد الليالي ─────────────────────────────────────────────
 export function calcNights(checkIn: string, checkOut: string): number {
   const msPerDay = 1000 * 60 * 60 * 24;
-  return Math.max(
-    0,
-    Math.round(
-      (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / msPerDay
-    )
-  );
+  return Math.max(0, Math.round(
+    (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / msPerDay
+  ));
 }
 
-// ─── إضافة حجز جديد ───────────────────────────────────────────────
 export const addBooking = async (data: NewBooking): Promise<string> => {
   const docRef = await addDoc(collection(db, "bookings"), {
     ...data,
@@ -51,28 +41,19 @@ export const addBooking = async (data: NewBooking): Promise<string> => {
   return docRef.id;
 };
 
-// ─── جلب حجوزات اليوزر الحالي ─────────────────────────────────────
 export const getMyBookings = async (): Promise<Booking[]> => {
-  const user = auth.currentUser;
-  if (!user) return [];
+  const user = await StorageService.getUser();
+  if (!user?.userId) return [];
 
-  const q = query(
-    collection(db, "bookings"),
-    where("userId", "==", user.uid)
-  );
+  const q = query(collection(db, "bookings"), where("userId", "==", user.userId));
   const snapshot = await getDocs(q);
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Booking));
 };
 
-// ─── تحديث حالة الحجز ─────────────────────────────────────────────
-export const updateBookingStatus = async (
-  bookingId: string,
-  status: BookingStatus
-): Promise<void> => {
+export const updateBookingStatus = async (bookingId: string, status: BookingStatus): Promise<void> => {
   await updateDoc(doc(db, "bookings", bookingId), { status });
 };
 
-// ─── إلغاء حجز ────────────────────────────────────────────────────
 export const cancelBooking = async (bookingId: string): Promise<void> => {
   await updateBookingStatus(bookingId, "cancelled");
 };

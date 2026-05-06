@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../../FirebaseConfig";
 import StorageService from "./StorageService";
 
@@ -12,11 +12,13 @@ export const loginUser = async (email: string, password: string) => {
     where("email", "==", email),
     where("password", "==", password)
   );
+
   const snapshot = await getDocs(q);
   if (snapshot.empty) throw new Error("Invalid email or password");
 
   const userDoc = snapshot.docs[0];
   const userData = userDoc.data();
+
   const user = {
     userId: userDoc.id,
     name: userData.name,
@@ -35,6 +37,7 @@ export const registerUser = async (name: string, email: string, password: string
   const exists = await getDocs(
     query(collection(db, "user"), where("email", "==", email))
   );
+
   if (!exists.empty) throw new Error("Email already registered");
 
   const docRef = await addDoc(collection(db, "user"), {
@@ -60,4 +63,27 @@ export const logoutUser = async () => {
 
 export const getUserToken = async (): Promise<string | null> => {
   return await StorageService.getToken();
+};
+
+export const updateUserProfile = async (name: string, email: string) => {
+  const currentUser = await StorageService.getUser();
+
+  if (!currentUser?.userId) {
+    throw new Error("User not found");
+  }
+
+  await updateDoc(doc(db, "user", currentUser.userId), {
+    name,
+    email,
+  });
+
+  const updatedUser = {
+    ...currentUser,
+    name,
+    email,
+  };
+
+  await StorageService.saveUser(updatedUser);
+
+  return updatedUser;
 };

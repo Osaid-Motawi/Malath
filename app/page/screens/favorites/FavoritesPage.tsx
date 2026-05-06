@@ -1,20 +1,26 @@
 import React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  SafeAreaView,
-} from "react-native";
-import { useChalets } from "../components/ChaletContext";
+import { router } from "expo-router";
+
+import { View, Text, FlatList, StyleSheet, SafeAreaView,  TouchableOpacity, } from "react-native";
 import ChaletCard from "../components/ChaletCard";
 import { WhiteHeartIcon } from "../components/CustomIcon";
-export default function FavoritesPage() {
-  const { chalets, favorites } = useChalets();
+import { useChalet } from "../components/ChaletContext";
+import Svg, { Path } from "react-native-svg";
+const BackIcon = () => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M15 6L9 12L15 18"
+      stroke="#4F2396"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+const FavoritesPage = () => {
+  const { chalets, favorites } = useChalet();
 
-  const favoriteChalets = chalets.filter((c) =>
-    favorites.includes(c.id)
-  );
+  const favoriteChalets = chalets.filter((c) => favorites.includes(c.id));
 
   if (favoriteChalets.length === 0) {
     return (
@@ -22,11 +28,11 @@ export default function FavoritesPage() {
         <Text style={styles.title}>المفضلة</Text>
 
         <View style={styles.empty}>
-          <Text style={styles.emptyIcon}><WhiteHeartIcon /></Text>
-          <Text style={styles.emptyText}>لا يوجد شاليهات في المفضلة</Text>
-          <Text style={styles.emptySubText}>
-            اضغط على القلب لإضافة شاليه
+          <Text style={styles.emptyIcon}>
+            <WhiteHeartIcon />
           </Text>
+          <Text style={styles.emptyText}>لا يوجد شاليهات في المفضلة</Text>
+          <Text style={styles.emptySubText}>اضغط على القلب لإضافة شاليه</Text>
         </View>
       </SafeAreaView>
     );
@@ -35,17 +41,17 @@ export default function FavoritesPage() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.header}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+            <BackIcon />
+          </TouchableOpacity>
         <Text style={styles.title}>المفضلة</Text>
 
         <View style={styles.badge}>
-          <Text style={styles.badgeText}>
-            {favoriteChalets.length}
-          </Text>
+          <Text style={styles.badgeText}>{favoriteChalets.length}</Text>
         </View>
       </View>
-      <Text style={styles.subtitle}>
-        {favoriteChalets.length} شاليه محفوظ
-      </Text>
+
+      <Text style={styles.subtitle}>{favoriteChalets.length} شاليه محفوظ</Text>
 
       <FlatList
         data={favoriteChalets}
@@ -69,7 +75,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F3F4F6",
   },
-
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -77,68 +82,66 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     marginBottom: 6,
   },
-
   title: {
     fontSize: 26,
     fontWeight: "bold",
     color: "#1a1a1a",
   },
-
   badge: {
     marginLeft: 8,
-    backgroundColor: "#EF4444",
+    backgroundColor: "#4F2396",
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
-
+    backBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#EDE9FE",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   badgeText: {
     color: "#fff",
     fontSize: 13,
     fontWeight: "bold",
   },
-
   subtitle: {
     fontSize: 13,
     color: "#030303",
     paddingHorizontal: 20,
     marginBottom: 10,
   },
-
   list: {
     paddingHorizontal: 12,
     paddingBottom: 20,
   },
-
   row: {
     justifyContent: "space-between",
     marginBottom: 12,
   },
-
   cardWrapper: {
     width: "48%",
   },
-
   empty: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-
   emptyIcon: {
     fontSize: 70,
     marginBottom: 10,
   },
-
   emptyText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#374151",
   },
-
   emptySubText: {
     fontSize: 14,
     color: "#9CA3AF",
     marginTop: 4,
   },
 });
+export default FavoritesPage;
