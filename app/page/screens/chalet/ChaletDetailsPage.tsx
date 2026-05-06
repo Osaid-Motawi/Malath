@@ -1,3 +1,4 @@
+import NetInfo from '@react-native-community/netinfo';
 import { router } from 'expo-router';
 import { doc, onSnapshot } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
@@ -6,8 +7,9 @@ import { db } from '../../../../FirebaseConfig';
 import { Chalet } from '../../services/chaletService';
 import AccordionItem from '../components/AccordionItem';
 import { BathIcon, BedIcon, ChairIcon, FacilitiesIcon, HeartIcon, KitchenIcon, LocationIcon, ParkingIcon, PersonIcon, PoolIcon, StarIcon, WifiIcon } from '../components/CustomIcon';
-import FeatureItem from '../components/FeatureItem';
 import Description from '../components/Description';
+import FeatureItem from '../components/FeatureItem';
+import { datab } from '../Database/database';
 interface Props {chaletId: string;}
 export default function ChaletDetailsPage({ chaletId }: Props) {
   const [chalet, setChalet] = useState<Chalet | null>(null);
@@ -15,14 +17,34 @@ export default function ChaletDetailsPage({ chaletId }: Props) {
   const [activeTab, setActiveTab] = useState('المواصفات');
   const [expanded, setExpanded] = useState(false);
   const [favorited, setFavorited] = useState(false);
-  useEffect(() => {
-    const ref = doc(db, 'chalets', chaletId);
-    const unsubscribe = onSnapshot(ref, (snap) => {
-      if (snap.exists()) {
-        setChalet({ id: snap.id, ...snap.data() } as Chalet);
-      }
-      setLoading(false);});
-    return () => unsubscribe();}, [chaletId]);
+  const loadFromSQLite = async () => {const result = await datab.getAllAsync(
+    'SELECT * FROM chalets WHERE id = ?',
+    [chaletId]
+  );
+  if (result.length > 0) {
+    setChalet(result[0] as Chalet);
+  }
+  setLoading(false);};
+ useEffect(() => {
+  const ref = doc(db, 'chalets', chaletId);
+
+  const unsubscribe = onSnapshot(ref, async (snap) => {
+    if (snap.exists()) {
+      const data = { id: snap.id, ...snap.data() } as Chalet;
+
+      setChalet(data);
+
+      await datab.runAsync(
+        `INSERT OR REPLACE INTO chalets 
+         (id, name, location, price, description)
+         VALUES (?, ?, ?, ?, ?)`,
+        [ data.id,data.name || '',data.location || '',data.price || 0,data.description ?? ''] );}
+    setLoading(false);});
+  NetInfo.fetch().then(state => {
+    if (!state.isConnected) {
+      loadFromSQLite();}});
+  return () => unsubscribe();
+}, [chaletId]);
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
