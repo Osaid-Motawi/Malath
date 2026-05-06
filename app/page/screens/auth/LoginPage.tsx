@@ -14,15 +14,11 @@ import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { loading, error, login, logout } = useAuth();
+  const { loading, error, login } = useAuth();
 
   const handleLogin = async () => {
     await login(email, password);
   };
-
-
-
-
   return (
     <SafeAreaView style={s.safe}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
@@ -68,9 +64,6 @@ import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
                   <Text style={s.btnOutlineText}>Sign Up</Text>
                 </TouchableOpacity>
               </View>
-
-
-
             </View>
           </View>
         </ScrollView>
