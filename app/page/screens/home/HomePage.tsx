@@ -21,7 +21,7 @@ import HeroFadeSlider from "../components/HeroFadeSlider";
 
 const { width } = Dimensions.get("window");
 
-//  FullView Component 
+//  FullView Component
 function FullView({ title, data, onBack }: any) {
   const insets = useSafeAreaInsets();
   return (

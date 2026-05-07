@@ -283,6 +283,42 @@ export const BookingStepsIcon = ({ size = 22, color = "#6A0DAD" }) => (
   </Svg>
 );
 
+
+export const CalendarIcon = ({ size = 18, color = "#18251D" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path
+      d="M8 2v3M16 2v3M3 8h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"
+      stroke={color} strokeWidth="2" strokeLinecap="round" fill="none"
+    />
+  </Svg>
+);
+ 
+
+export const UsersIcon = ({ size = 18, color = "#18251D" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" />
+    <Circle cx="9" cy="7" r="4" stroke={color} strokeWidth="2" fill="none" />
+    <Path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" />
+  </Svg>
+);
+ 
+
+export const NoteIcon = ({ size = 18, color = "#18251D" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" />
+    <Path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" />
+  </Svg>
+);
+ 
+
+export const MoonIcon = ({ size = 16, color = "#fff" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" />
+  </Svg>
+);
+
+
+
 export const AddChaletIcon = ({ size = 22, color = "#6A0DAD" }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path
