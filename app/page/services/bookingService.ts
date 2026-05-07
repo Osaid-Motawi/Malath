@@ -1,4 +1,8 @@
 import {
+<<<<<<< HEAD
+  addDoc, collection, getDocs, query, where,
+  Timestamp, doc, updateDoc,
+=======
   addDoc,
   collection,
   getDocs,
@@ -7,12 +11,17 @@ import {
   Timestamp,
   doc,
   deleteDoc,
+>>>>>>> 74d76326fea655e59bdb0f26434fb6c801b3bf4e
 } from "firebase/firestore";
 import { db } from "../../../FirebaseConfig";
 import StorageService from "./StorageService";
 
 
+<<<<<<< HEAD
+export type BookingStatus = "pending" | "confirmed" | "cancelled" | "completed";
+=======
 export type BookingStatus = "pending" | "confirmed" | "rejected";
+>>>>>>> 74d76326fea655e59bdb0f26434fb6c801b3bf4e
 
 export interface Booking {
   id: string;
@@ -107,6 +116,6 @@ export const getMyBookings = async (): Promise<Booking[]> => {
 };
 
 
-export const deleteBooking = async (bookingId: string): Promise<void> => {
-  await deleteDoc(doc(db, "bookings", bookingId));
+export const cancelBooking = async (bookingId: string): Promise<void> => {
+  await updateBookingStatus(bookingId, "cancelled");
 };

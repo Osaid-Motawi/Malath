@@ -152,7 +152,7 @@ export default function AddEditChaletScreen() {
         bedrooms: form.bedrooms ? Number(form.bedrooms) : undefined,
         bathrooms: form.bathrooms ? Number(form.bathrooms) : undefined,
         discount: form.discount ? Number(form.discount) : undefined,
-        image: form.image.trim() || "",
+        image: form.image.trim() || undefined,
         images: form.image.trim() ? [form.image.trim()] : [],
         status: form.status,
         amenities: form.amenities,
@@ -166,10 +166,10 @@ export default function AddEditChaletScreen() {
 
       Alert.alert("تم", isEdit ? "تم تعديل الشاليه" : "تمت إضافة الشاليه");
       router.back();
-    } catch (e: any) {
-  console.error("ADD CHALET ERROR:", e);
-  Alert.alert("خطأ", e?.message || "فشل الحفظ، حاول مجدداً");
-} finally {
+    } catch (e) {
+      console.error(e);
+      Alert.alert("خطأ", "فشل الحفظ، حاول مجددًا");
+    } finally {
       setSaving(false);
     }
   }

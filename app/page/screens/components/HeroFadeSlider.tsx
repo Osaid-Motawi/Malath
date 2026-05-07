@@ -1,75 +1,79 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 
 const { width } = Dimensions.get('window');
-const WHITE_IMAGE = "https://ui-avatars.com/api/?background=ffffff&color=ffffff&size=512";
 
-interface Slide { 
-  id: string; 
-  image?: string;
-  photo?: { photoA?: string };
-  name: string; 
+type Slide = {
+  id: string;
+  name: string;
   location?: string;
-}
+  image?: string;
+};
+export default function SimpleHeroSlider({ slides }: { slides: Slide[] }) {
 
-export default function HeroFadeSlider({ slides }: { slides: Slide[] }) {
+  const [randomSlides, setRandomSlides] = useState<Slide[]>([]);
   const [index, setIndex] = useState(0);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-
-  const randomizedSlides = useMemo(() => {
-    if (!slides?.length) return [];
-    return [...slides]
-      .sort(() => Math.random() - 0.5)
-      .map(item => ({ ...item, displayImage: item.image || item.photo?.photoA || WHITE_IMAGE }));
-  }, [slides]);
-
-  useEffect(() => { setIndex(0); }, [randomizedSlides]);
 
   useEffect(() => {
-    if (randomizedSlides.length <= 1) return;
+    const shuffled = [...slides].sort(() => Math.random() - 0.5);
+    setRandomSlides(shuffled);
+  }, [slides]);
 
-    const fade = (toValue: number, cb?: () => void) =>
-      Animated.timing(fadeAnim, { toValue, duration: 800, useNativeDriver: true }).start(cb);
+  useEffect(() => {
+
+    if (randomSlides.length <= 1) return;
 
     const timer = setInterval(() => {
-      fade(0.4, () => {
-        setIndex(prev => (prev + 1) % randomizedSlides.length);
-        fade(1);
-      });
+      setIndex((prev) => (prev + 1) % randomSlides.length);
     }, 4000);
 
     return () => clearInterval(timer);
-  }, [randomizedSlides.length]);
 
-  if (!randomizedSlides.length) return null;
+  }, [randomSlides]);
 
-  const current = randomizedSlides[index];
+  if (randomSlides.length === 0) return null;
+
+  const current = randomSlides[index];
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.slide, { opacity: fadeAnim }]}>
 
-        <Image source={{ uri: current.displayImage }} style={styles.image} resizeMode="cover" />
-        <View style={styles.overlay} />
+      <Image
+        source={{ uri: current.image }}
+        style={styles.image}
+      />
 
-        <View style={styles.textContainer}>
-          <Text style={styles.subtitle}>مختاراتنا المميزة</Text>
-          <Text style={styles.title}>{current.name}</Text>
-          {current.location && <Text style={styles.location}>{current.location}</Text>}
-        </View>
+      <View style={styles.overlay} />
 
-      </Animated.View>
+      <View style={styles.textBox}>
+        <Text style={styles.smallText}>مختاراتنا المميزة</Text>
+
+        <Text style={styles.title}>
+          {current.name}
+        </Text>
+
+        <Text style={styles.location}>
+          {current.location}
+        </Text>
+      </View>
+
     </View>
   );
 }
-
 const styles = StyleSheet.create({
-  container:     { width, height: 450, backgroundColor: '#FFF' },
-  slide:         { width, height: 450 },
-  image:         { width, height: 450, backgroundColor: '#FFF' },
-  overlay:       { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.2)' },
-  textContainer: { position: 'absolute', bottom: 60, right: 25, alignItems: 'flex-end' },
-  subtitle:      { color: '#C5A358', fontSize: 13, fontWeight: '700', marginBottom: 6 },
-  title:         { color: '#FFF', fontSize: 30, fontWeight: '900', textShadowColor: 'rgba(0,0,0,0.5)', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 10 },
-  location:      { color: '#E0E0E0', fontSize: 15, marginTop: 4, fontWeight: '500' },
+
+  container: {width: width,height: 450},
+
+  image: {width: width,height: 450,},
+
+  overlay: { ...StyleSheet.absoluteFillObject,backgroundColor: 'rgba(0,0,0,0.25)',  },
+
+  textBox: {position: 'absolute', bottom: 60,right: 25,alignItems: 'flex-end',},
+
+  smallText: {color: '#C5A358',fontSize: 14,fontWeight: 'bold',},
+
+  title: {color: '#fff',fontSize: 30,fontWeight: 'bold',},
+
+  location: {color: '#eee',fontSize: 16,marginTop: 5,},
+
 });
