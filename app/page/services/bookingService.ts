@@ -1,16 +1,10 @@
 import {
-  addDoc,
-  collection,
-  getDocs,
-  query,
-  where,
-  Timestamp,
-  doc,
-  deleteDoc,
+  addDoc, collection, getDocs, query, where,
+  Timestamp, doc, updateDoc, deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../../FirebaseConfig";
 import StorageService from "./StorageService";
-
+import { addNotification } from "./notificationService";
 
 export type BookingStatus = "pending" | "confirmed" | "rejected";
 
@@ -91,6 +85,13 @@ export const addBooking = async (data: NewBooking): Promise<string> => {
     ...data,
     createdAt: Timestamp.now(),
   });
+
+  await addNotification(
+    data.userId,
+    `تم استلام طلب حجزك لشاليه "${data.chaletName}" بانتظار موافقة الإدارة`,
+    "booking_pending"
+  );
+
   return docRef.id;
 };
 
@@ -98,10 +99,7 @@ export const addBooking = async (data: NewBooking): Promise<string> => {
 export const getMyBookings = async (): Promise<Booking[]> => {
   const user = await StorageService.getUser();
   if (!user?.userId) return [];
-  const q = query(
-    collection(db, "bookings"),
-    where("userId", "==", user.userId)
-  );
+  const q = query(collection(db, "bookings"), where("userId", "==", user.userId));
   const snapshot = await getDocs(q);
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Booking));
 };
