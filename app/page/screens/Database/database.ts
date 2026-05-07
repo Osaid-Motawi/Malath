@@ -1,4 +1,4 @@
-import * as SQLite from 'expo-sqlite';
+/*import * as SQLite from 'expo-sqlite';
 export const datab = SQLite.openDatabaseSync('chalets.db');
 export const initDB = async () => {
   await datab.execAsync(`
@@ -10,4 +10,4 @@ export const initDB = async () => {
       description TEXT 
     );
   `);
-};
+};*/
