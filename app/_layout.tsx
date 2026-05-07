@@ -14,6 +14,7 @@ export default function RootLayout() {
           <Stack.Screen name="register" />
           <Stack.Screen name="booking" />
           <Stack.Screen name="chalet-details" />
+          <Stack.Screen name="add-edit-chalet" />
         </Stack>
       </ChaletProvider>
     </QueryClientProvider>

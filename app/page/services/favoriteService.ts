@@ -1,6 +1,8 @@
 import { collection, addDoc, deleteDoc, getDocs, query, where, doc } from "firebase/firestore";
 import { db } from "../../../FirebaseConfig"; 
 import StorageService from "./StorageService"; 
+import { addNotification } from "./notificationService";
+import { getChaletById } from "./chaletService";
 
 export const getFavorites = async (): Promise<string[]> => {
   const userId = await StorageService.getUser().then((u) => u?.userId);
@@ -14,8 +16,17 @@ export const getFavorites = async (): Promise<string[]> => {
 export const addFavorite = async (chaletId: string): Promise<void> => {
   const userId = await StorageService.getUser().then((u) => u?.userId);
   if (!userId) return;
-
+ 
   await addDoc(collection(db, "favorites"), { chaletId, userId });
+ 
+  const chalet = await getChaletById(chaletId);
+  if (chalet?.ownerId) {
+    await addNotification(
+      chalet.ownerId,
+      `أضاف شخص شاليهك "${chalet.name}" إلى المفضلة `,
+      "favorite"
+    );
+  }
 };
 
 export const removeFavorite = async (chaletId: string): Promise<void> => {
