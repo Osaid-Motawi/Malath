@@ -23,7 +23,6 @@ export const useOwnerDashboard = () => {
 
   const loadDashboard = async () => {
     setLoading(true);
-
     const user = await StorageService.getUser();
 
     if (user?.role !== "owner") {
