@@ -2,13 +2,13 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { askMalathAI } from "../../services/aiService";
-import { useChalets } from "../components/ChaletContext";
+import { useChalet } from "../components/ChaletContext";
 import { DeerIcon } from "../components/CustomIcon";
 
 type Message = { role: string; content: string };
 
 export default function MalathChat() {
-  const { chalets } = useChalets();
+  const { chalets } = useChalet();
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
