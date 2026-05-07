@@ -13,13 +13,13 @@ import {
   View
 } from 'react-native';
 import { askMalathAI } from "../../services/aiService";
-import { useChalets } from "../components/ChaletContext";
+import { useChalet } from "../components/ChaletContext";
 import { AddChaletIcon, BookingStepsIcon, DeerIcon } from '../components/CustomIcon';
 
 const { height } = Dimensions.get('window');
 
 function MalathChatComponent({ onBack }: { onBack: () => void }) {
-  const { chalets } = useChalets();
+  const { chalets } = useChalet();
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [isTyping, setIsTyping] = useState(false);
