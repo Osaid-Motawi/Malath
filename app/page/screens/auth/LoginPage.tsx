@@ -69,7 +69,21 @@ import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
                 </TouchableOpacity>
               </View>
 
-
+            <TouchableOpacity
+  onPress={() =>
+    router.push("/forgotpassword")
+  }
+>
+  <Text
+    style={{
+      color: "#4F2396",
+      marginTop: 10,
+      fontWeight: "600",
+    }}
+  >
+    Forgot Password?
+  </Text>
+</TouchableOpacity>
 
             </View>
           </View>

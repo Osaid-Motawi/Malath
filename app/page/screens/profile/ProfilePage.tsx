@@ -64,6 +64,16 @@ export default function ProfilePage() {
           <Text style={styles.menuText}>Edit Profile</Text>
         </TouchableOpacity>
 
+          <TouchableOpacity
+            style={styles.menuItem}
+          onPress={() =>
+            router.push("/forgotpassword")
+          }
+        >
+          <Ionicons name="key-outline" size={22} color="#4F2396" />
+          <Text style={styles.menuText}>Forgot Password?</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.menuItem}
           onPress={() => router.push("/favorites")}
