@@ -99,7 +99,6 @@ export default function ResetPasswordPage() {
       Save Password
     </Text>
   </TouchableOpacity>
-
 </View>
   );
 }
