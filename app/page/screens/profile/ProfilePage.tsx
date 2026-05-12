@@ -150,11 +150,11 @@ export default function ProfilePage() {
           <TouchableOpacity
             style={styles.menuItem}
           onPress={() =>
-            router.push("/forgotpassword")
+            router.push("/resetpassword")
           }
         >
           <Ionicons name="key-outline" size={22} color="#4F2396" />
-          <Text style={styles.menuText}>Forgot Password?</Text>
+          <Text style={styles.menuText}>Reset Password?</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
