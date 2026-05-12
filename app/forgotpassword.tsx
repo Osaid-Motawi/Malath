@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
   Alert,
@@ -14,6 +14,7 @@ import { checkEmailExists } from "./page/services/authService";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
+  const emailRef = useRef<TextInput>(null);
 
   const handleContinue = async () => {
     try {
@@ -52,11 +53,15 @@ export default function ForgotPasswordPage() {
   </Text>
 
   <TextInput
-    style={styles.input}
-    placeholder="Enter your email"
-    placeholderTextColor="#999"
-    value={email}
-    onChangeText={setEmail}
+        ref={emailRef}
+        autoFocus
+        style={styles.input}
+        placeholder="Enter your email"
+        placeholderTextColor="#999"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
   />
 
   <TouchableOpacity

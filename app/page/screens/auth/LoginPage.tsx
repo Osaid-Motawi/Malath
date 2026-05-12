@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView,
   StyleSheet, Text, TextInput, TouchableOpacity, View,
@@ -16,7 +16,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const { loading, error, login} = useAuth();
-
+  const passwordRef = useRef<TextInput>(null);
   const handleLogin = async () => {
     await login(email, password);
   };
@@ -41,20 +41,25 @@ const LoginPage = () => {
 
               <Text style={s.label}>البريد الإلكتروني</Text>
               <View style={s.inputRow}>
-                <TextInput style={s.input} placeholder="example@gmail.com" placeholderTextColor="#A0A0A0"
+                <TextInput autoFocus style={s.input} placeholder="example@gmail.com" placeholderTextColor="#A0A0A0"
                   keyboardType="email-address" autoCapitalize="none"
-                  value={email} onChangeText={setEmail} textAlign="right" />
+                  value={email} onChangeText={setEmail} textAlign="right" returnKeyType="next" onSubmitEditing={() => passwordRef.current?.focus()}/>
               </View>
 
               <Text style={s.label}>كلمة المرور</Text>
               <View style={s.inputRow}>
                 <TextInput style={s.input} placeholder="••••••••" placeholderTextColor="#A0A0A0"
-                  secureTextEntry={!showPassword} value={password} onChangeText={setPassword} textAlign="right" />
+                  secureTextEntry={!showPassword} value={password} onChangeText={setPassword} textAlign="right" returnKeyType="done" onSubmitEditing={handleLogin} ref={passwordRef} />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                   {showPassword ? <EyeIcon size={18} color="#6A0DAD" /> : <EyeOffIcon size={18} color="#8B8B8B" />}
                 </TouchableOpacity>
               </View>
-
+              <TouchableOpacity
+                style={s.forgotContainer}
+                onPress={() => router.push("/forgotpassword")}
+              >
+                <Text style={s.forgotText}>نسيت كلمة المرور؟</Text>
+              </TouchableOpacity>
               {!!error && <Text style={s.error}>{error}</Text>}
 
               <View style={s.btnRow}>
@@ -74,6 +79,7 @@ const LoginPage = () => {
     </SafeAreaView>
   );
 }
+
 const s = StyleSheet.create({
   safe: {flex: 1,backgroundColor: "#FFFFFF"},
 outer: {flexGrow: 1,justifyContent: "center",alignItems: "center",paddingHorizontal: 24,paddingVertical: 30},
@@ -95,6 +101,10 @@ btnPrimaryText: {color: "#FFFFFF",fontWeight: "900",fontSize: 15},
 btnOutline: {flex: 1,borderWidth: 1.5,borderColor: "#6A0DAD",borderRadius: 28,height: 54,justifyContent: "center",alignItems: "center"},
 btnOutlineText: {color: "#6A0DAD",fontWeight: "900",fontSize: 15},
 logoutBtn: {backgroundColor: "#F69D58",borderRadius: 20,padding: 12,alignItems: "center",marginTop: 12},
-logoutText: {color: "#fff",fontWeight: "bold",fontSize: 14},
+logoutText: {color: "#fff",fontWeight: "bold",
+fontSize: 14},
+forgotContainer: {alignSelf: "flex-end",marginBottom: 10},
+forgotText: {color: "#6A0DAD",fontSize: 13,fontWeight: "800"},
 });
+
 export default LoginPage;

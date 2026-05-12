@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView,
   StyleSheet, Text, TextInput, TouchableOpacity, View,
@@ -16,6 +16,10 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const lastNameRef = useRef<TextInput>(null);
+  const emailRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInput>(null);
+  const confirmPasswordRef = useRef<TextInput>(null);
 
   const { loading, error, register } = useAuth();
 
@@ -43,11 +47,14 @@ return (
                   <Text style={s.label}>الاسم الأول</Text>
                   <View style={s.inputRow}>
                     <TextInput
+                      autoFocus
                       style={s.input}
                       placeholder="أدخل الاسم الأول"
                       placeholderTextColor="#999"
                       value={firstName}
                       onChangeText={setFirstName}
+                      returnKeyType="next"
+                      onSubmitEditing={() => lastNameRef.current?.focus()}
                     />
                   </View>
                 </View>
@@ -56,11 +63,14 @@ return (
                   <Text style={s.label}>اسم العائلة</Text>
                   <View style={s.inputRow}>
                     <TextInput
+                      ref={lastNameRef}
                       style={s.input}
                       placeholder="أدخل اسم العائلة"
                       placeholderTextColor="#999"
                       value={lastName}
                       onChangeText={setLastName}
+                      returnKeyType="next"
+                      onSubmitEditing={() => emailRef.current?.focus()}
                     />
                   </View>
                 </View>
@@ -70,6 +80,7 @@ return (
 
               <View style={s.inputRow}>
                 <TextInput
+                  ref={emailRef}
                   style={s.input}
                   placeholder="أدخل البريد الإلكتروني"
                   placeholderTextColor="#999"
@@ -77,6 +88,8 @@ return (
                   autoCapitalize="none"
                   value={email}
                   onChangeText={setEmail}
+                  returnKeyType="next"
+                  onSubmitEditing={() => passwordRef.current?.focus()}
                 />
               </View>
 
@@ -84,12 +97,15 @@ return (
 
               <View style={s.inputRow}>
                 <TextInput
+                  ref={passwordRef}
                   style={s.input}
                   placeholder="أدخل كلمة المرور"
                   placeholderTextColor="#999"
                   secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
+                  returnKeyType="next"
+                  onSubmitEditing={() => confirmPasswordRef.current?.focus()}
                 />
                 <TouchableOpacity
                   onPress={() => setShowPassword(!showPassword)}
@@ -106,12 +122,15 @@ return (
 
               <View style={s.inputRow}>
                 <TextInput
+                  ref={confirmPasswordRef}
                   style={s.input}
                   placeholder="أعد إدخال كلمة المرور"
                   placeholderTextColor="#999"
                   secureTextEntry={!showConfirm}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
+                  returnKeyType="done"
+                  onSubmitEditing={handleRegister}
                 />
 
                 <TouchableOpacity
