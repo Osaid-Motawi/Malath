@@ -70,6 +70,7 @@ export default function ResetPasswordPage() {
   </Text>
 
 <TextInput
+  autoFocus
   style={styles.input}
   placeholder="Enter new password"
   placeholderTextColor="#999"
