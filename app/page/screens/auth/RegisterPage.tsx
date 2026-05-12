@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView,
   StyleSheet, Text, TextInput, TouchableOpacity, View,
@@ -17,6 +17,10 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const lastNameRef = useRef<TextInput>(null);
+  const emailRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInput>(null);
+  const confirmPasswordRef = useRef<TextInput>(null);
 
   const { loading, error, register } = useAuth();
 
@@ -45,41 +49,97 @@ const RegisterPage = () => {
                 <View style={{ flex: 1 }}>
                   <Text style={s.label}>First Name</Text>
                   <View style={s.inputRow}>
-                    <TextInput style={s.input} placeholder="First name" placeholderTextColor="#aaa"
-                      value={firstName} onChangeText={setFirstName} />
+                    <TextInput
+                      autoFocus
+                      style={s.input}
+                      placeholder="أدخل الاسم الأول"
+                      placeholderTextColor="#999"
+                      value={firstName}
+                      onChangeText={setFirstName}
+                      returnKeyType="next"
+                      onSubmitEditing={() => lastNameRef.current?.focus()}
+                    />
                   </View>
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={s.label}>Last Name</Text>
                   <View style={s.inputRow}>
-                    <TextInput style={s.input} placeholder="Last name" placeholderTextColor="#aaa"
-                      value={lastName} onChangeText={setLastName} />
+                    <TextInput
+                      ref={lastNameRef}
+                      style={s.input}
+                      placeholder="أدخل اسم العائلة"
+                      placeholderTextColor="#999"
+                      value={lastName}
+                      onChangeText={setLastName}
+                      returnKeyType="next"
+                      onSubmitEditing={() => emailRef.current?.focus()}
+                    />
                   </View>
                 </View>
               </View>
 
               <Text style={s.label}>E-mail Address</Text>
               <View style={s.inputRow}>
-                <TextInput style={s.input} placeholder="Enter your mail" placeholderTextColor="#aaa"
-                  keyboardType="email-address" autoCapitalize="none"
-                  value={email} onChangeText={setEmail} />
+                <TextInput
+                  ref={emailRef}
+                  style={s.input}
+                  placeholder="أدخل البريد الإلكتروني"
+                  placeholderTextColor="#999"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={email}
+                  onChangeText={setEmail}
+                  returnKeyType="next"
+                  onSubmitEditing={() => passwordRef.current?.focus()}
+                />
               </View>
 
               <Text style={s.label}>Password</Text>
               <View style={s.inputRow}>
-                <TextInput style={s.input} placeholder="Enter your password" placeholderTextColor="#aaa"
-                  secureTextEntry={!showPassword} value={password} onChangeText={setPassword} />
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <EyeIcon size={18} color="#aaa" /> : <EyeOffIcon size={18} color="#aaa" />}
+                <TextInput
+                  ref={passwordRef}
+                  style={s.input}
+                  placeholder="أدخل كلمة المرور"
+                  placeholderTextColor="#999"
+                  secureTextEntry={!showPassword}
+                  value={password}
+                  onChangeText={setPassword}
+                  returnKeyType="next"
+                  onSubmitEditing={() => confirmPasswordRef.current?.focus()}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeIcon size={18} color="#888" />
+                  ) : (
+                    <EyeOffIcon size={18} color="#888" />
+                  )}
                 </TouchableOpacity>
               </View>
 
               <Text style={s.label}>Confirm Password</Text>
               <View style={s.inputRow}>
-                <TextInput style={s.input} placeholder="Confirm your password" placeholderTextColor="#aaa"
-                  secureTextEntry={!showConfirm} value={confirmPassword} onChangeText={setConfirmPassword} />
-                <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)}>
-                  {showConfirm ? <EyeIcon size={18} color="#aaa" /> : <EyeOffIcon size={18} color="#aaa" />}
+                <TextInput
+                  ref={confirmPasswordRef}
+                  style={s.input}
+                  placeholder="أعد إدخال كلمة المرور"
+                  placeholderTextColor="#999"
+                  secureTextEntry={!showConfirm}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  returnKeyType="done"
+                  onSubmitEditing={handleRegister}
+                />
+
+                <TouchableOpacity
+                  onPress={() => setShowConfirm(!showConfirm)}
+                >
+                  {showConfirm ? (
+                    <EyeIcon size={18} color="#888" />
+                  ) : (
+                    <EyeOffIcon size={18} color="#888" />
+                  )}
                 </TouchableOpacity>
               </View>
 

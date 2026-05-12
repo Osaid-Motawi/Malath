@@ -1,6 +1,6 @@
 import { useLocalSearchParams, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import {
   Alert,
@@ -18,7 +18,7 @@ export default function ResetPasswordPage() {
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-
+  const confirmRef = useRef<TextInput>(null);
   const handleReset = async () => {
     if (password !== confirm) {
       Alert.alert(
@@ -69,27 +69,32 @@ export default function ResetPasswordPage() {
     New Password
   </Text>
 
-  <TextInput
-    style={styles.input}
-    placeholder="Enter new password"
-    placeholderTextColor="#999"
-    secureTextEntry
-    value={password}
-    onChangeText={setPassword}
-  />
+<TextInput
+  style={styles.input}
+  placeholder="Enter new password"
+  placeholderTextColor="#999"
+  secureTextEntry
+  value={password}
+  onChangeText={setPassword}
+  returnKeyType="next"
+  onSubmitEditing={() => confirmRef.current?.focus()}
+/>
 
   <Text style={styles.label}>
     Confirm Password
   </Text>
 
   <TextInput
-    style={styles.input}
-    placeholder="Confirm password"
-    placeholderTextColor="#999"
-    secureTextEntry
-    value={confirm}
-    onChangeText={setConfirm}
-  />
+  ref={confirmRef}
+  style={styles.input}
+  placeholder="Confirm password"
+  placeholderTextColor="#999"
+  secureTextEntry
+  value={confirm}
+  onChangeText={setConfirm}
+  returnKeyType="done"
+  onSubmitEditing={handleReset}
+/>
 
   <TouchableOpacity
     style={styles.button}
