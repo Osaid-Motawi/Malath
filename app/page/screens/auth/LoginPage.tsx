@@ -8,7 +8,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
 
-  const LoginPage = () => {
+
+const LoginPage = () => {
     
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,9 +20,6 @@ import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
   const handleLogin = async () => {
     await login(email, password);
   };
-
-
-
 
   return (
     <SafeAreaView style={s.safe}>
@@ -36,25 +34,24 @@ import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
               <View style={s.logoCircle}>
               
               </View>
-              <Text style={s.desc}>Your trusted platform for chalet bookings across the region.</Text>
             </View>
 
             <View style={s.right}>
-              <Text style={s.formTitle}>Sign in to your account</Text>
+              <Text style={s.formTitle}>تسجيل الدخول</Text>
 
-              <Text style={s.label}>E-mail Address</Text>
+              <Text style={s.label}>البريد الإلكتروني</Text>
               <View style={s.inputRow}>
                 <TextInput autoFocus style={s.input} placeholder="example@gmail.com" placeholderTextColor="#A0A0A0"
                   keyboardType="email-address" autoCapitalize="none"
                   value={email} onChangeText={setEmail} textAlign="right" returnKeyType="next" onSubmitEditing={() => passwordRef.current?.focus()}/>
               </View>
 
-              <Text style={s.label}>Password</Text>
+              <Text style={s.label}>كلمة المرور</Text>
               <View style={s.inputRow}>
                 <TextInput style={s.input} placeholder="••••••••" placeholderTextColor="#A0A0A0"
                   secureTextEntry={!showPassword} value={password} onChangeText={setPassword} textAlign="right" returnKeyType="done" onSubmitEditing={handleLogin} ref={passwordRef} />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <EyeIcon size={18} color="#aaa" /> : <EyeOffIcon size={18} color="#aaa" />}
+                  {showPassword ? <EyeIcon size={18} color="#6A0DAD" /> : <EyeOffIcon size={18} color="#8B8B8B" />}
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
@@ -67,28 +64,13 @@ import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
 
               <View style={s.btnRow}>
                 <TouchableOpacity style={[s.btnPrimary, loading && s.btnDisabled]} onPress={handleLogin} disabled={loading}>
-                  {loading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.btnPrimaryText}>Sign In</Text>}
+                  {loading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.btnPrimaryText}>تسجيل الدخول</Text>}
                 </TouchableOpacity>
+
                 <TouchableOpacity style={s.btnOutline} onPress={() => router.push("/register")}>
-                  <Text style={s.btnOutlineText}>Sign Up</Text>
+                  <Text style={s.btnOutlineText}>إنشاء حساب</Text>
                 </TouchableOpacity>
               </View>
-
-            <TouchableOpacity
-  onPress={() =>
-    router.push("/forgotpassword")
-  }
->
-  <Text
-    style={{
-      color: "#4F2396",
-      marginTop: 10,
-      fontWeight: "600",
-    }}
-  >
-    Forgot Password?
-  </Text>
-</TouchableOpacity>
 
             </View>
           </View>
