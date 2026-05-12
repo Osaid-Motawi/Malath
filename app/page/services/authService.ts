@@ -86,4 +86,38 @@ export const updateUserProfile = async (name: string, email: string) => {
   await StorageService.saveUser(updatedUser);
 
   return updatedUser;
+
+  
+};
+export const checkEmailExists = async (
+  email: string
+) => {
+  const q = query(
+    collection(db, "user"),
+    where("email", "==", email)
+  );
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) return null;
+
+  return snapshot.docs[0];
+};
+
+export const resetPassword = async (
+  email: string,
+  newPassword: string
+) => {
+  const userDoc = await checkEmailExists(email);
+
+  if (!userDoc) {
+    throw new Error("User not found");
+  }
+
+  await updateDoc(
+    doc(db, "user", userDoc.id),
+    {
+      password: newPassword,
+    }
+  );
 };
