@@ -56,7 +56,8 @@ export default function OwnerChaletCard({ item, onEdit, onDelete }: Props) {
   </View>
 ) : (
   <TouchableOpacity style={styles.editBtn} onPress={() => onEdit(item)}>
-<Text style={styles.editBtnText}>تعديل</Text>  </TouchableOpacity>
+<Text style={styles.editBtnText}>تعديل</Text> 
+ </TouchableOpacity>
 )}
       </View>
     </View>
