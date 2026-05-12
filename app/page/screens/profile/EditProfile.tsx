@@ -78,7 +78,7 @@ const EditProfilePage = () => {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <ActivityIndicator size="large" color="#4F2396" style={{ marginTop: 60 }} />
+        <ActivityIndicator size="large" color="#6A0DAD" style={{ marginTop: 60 }} />
       </SafeAreaView>
     );
   }
@@ -90,9 +90,12 @@ const EditProfilePage = () => {
         style={{ flex: 1 }}
       >
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#111827" />
-          </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => router.back()}
+        style={styles.backBtn}
+      >
+        <Text style={styles.backArrow}>←</Text>
+      </TouchableOpacity>
 
           <Text style={styles.headerTitle}>تعديل الملف الشخصي</Text>
 
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#111827",
+    color: "#6A0DAD",
   },
 
   content: {
@@ -194,7 +197,7 @@ const styles = StyleSheet.create({
     width: 84,
     height: 84,
     borderRadius: 42,
-    backgroundColor: "#4F2396",
+    backgroundColor: "#6A0DAD",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
@@ -268,7 +271,7 @@ const styles = StyleSheet.create({
   },
 
   saveBtn: {
-    backgroundColor: "#4F2396",
+    backgroundColor: "#6A0DAD",
     borderRadius: 16,
     paddingVertical: 14,
     alignItems: "center",
@@ -284,4 +287,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "700",
   },
+  backBtn: {
+  width: 44,
+  height: 44,
+  borderRadius: 22,
+  backgroundColor: "#F4ECFF",
+  justifyContent: "center",
+  alignItems: "center",
+  borderWidth: 1,
+  borderColor: "#E6D7FF",
+},
+
+backArrow: {
+  fontSize: 26,
+  fontWeight: "900",
+  color: "#6A0DAD",
+  lineHeight: 28,
+},
 });

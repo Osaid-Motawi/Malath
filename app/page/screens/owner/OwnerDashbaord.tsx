@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import RequestCard from "../components/RequestCard";
 import { useOwnerDashboard } from "@/hooks/useOwnerDashboard";
+import RequestCard from "../components/RequestCard";
 
 export default function OwnerDashboard() {
   const {
@@ -33,7 +33,7 @@ export default function OwnerDashboard() {
   if (loading) {
     return (
       <SafeAreaView style={styles.safe}>
-        <ActivityIndicator size="large" color="#4F2396" style={{ marginTop: 60 }} />
+        <ActivityIndicator size="large" color="#6A0DAD" style={{ marginTop: 60 }} />
       </SafeAreaView>
     );
   }
@@ -43,7 +43,7 @@ export default function OwnerDashboard() {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#4F2396" />
+            <Ionicons name="arrow-back" size={22} color="#6A0DAD" />
           </TouchableOpacity>
 
           <Text style={styles.title}>Owner Dashboard</Text>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#4F2396",
+    color: "#6A0DAD",
   },
 
   statsRow: {
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#4F2396",
+    color: "#6A0DAD",
   },
 
   statText: {

@@ -50,10 +50,14 @@ export default function OwnerChaletCard({ item, onEdit, onDelete }: Props) {
         <TouchableOpacity style={styles.deleteBtn} onPress={() => onDelete(item)}>
           <Ionicons name="trash-outline" size={18} color="#EF4444" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.editBtn} onPress={() => onEdit(item)}>
-          <Ionicons name="create-outline" size={16} color="#fff" />
-          <Text style={styles.editBtnText}>تعديل</Text>
-        </TouchableOpacity>
+        {item.approvalStatus === "rejected" ? (
+  <View style={styles.rejectedBtn}>
+    <Text style={styles.rejectedText}>تم الرفض</Text>
+  </View>
+) : (
+  <TouchableOpacity style={styles.editBtn} onPress={() => onEdit(item)}>
+<Text style={styles.editBtnText}>تعديل</Text>  </TouchableOpacity>
+)}
       </View>
     </View>
   );
@@ -72,9 +76,11 @@ const styles = StyleSheet.create({
   bookedBadge: { backgroundColor: "#FEE2E2" },
   badgeText: { fontSize: 11, fontWeight: "700" },
   meta: { fontSize: 12, color: "#9CA3AF" },
-  price: { fontSize: 14, fontWeight: "700", color: "#4F2396" },
+  price: { fontSize: 14, fontWeight: "700", color: "#6A0DAD" },
   actions: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 12, paddingVertical: 10, borderTopWidth: 1, borderTopColor: "#F3F4F6" },
   deleteBtn: { width: 38, height: 38, borderRadius: 10, borderWidth: 1, borderColor: "#FEE2E2", backgroundColor: "#FFF5F5", justifyContent: "center", alignItems: "center" },
-  editBtn: { flex: 1, marginLeft: 10, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, backgroundColor: "#4F2396", borderRadius: 10, paddingVertical: 9 },
+  editBtn: { flex: 1, marginLeft: 10, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, backgroundColor: "#6A0DAD", borderRadius: 10, paddingVertical: 9 },
   editBtnText: { color: "#fff", fontWeight: "600", fontSize: 14 },
+  rejectedBtn: { backgroundColor: "#FEE2E2", paddingVertical: 10, paddingHorizontal: 14, borderRadius: 10, alignItems: "center" },
+  rejectedText: { color: "#DC2626", fontSize: 13, fontWeight: "700" },
 });

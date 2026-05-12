@@ -37,7 +37,7 @@ export default function MalathChat() {
     <View style={styles.chatContainer}>
 
       <View style={styles.chatHeader}>
-        <Text style={styles.chatHeaderTitle}>مساعد ملاذ الذكي</Text>
+        <Text style={styles.chatHeaderTitle}> ملاذ المساعد الذكي</Text>
       </View>
 
       <View style={styles.backgroundIconContainer} pointerEvents="none">
@@ -66,7 +66,6 @@ export default function MalathChat() {
           </View>
         ) : null}
       />
-
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
         <View style={styles.inputArea}>
           <TextInput style={styles.chatInput} placeholder="اسأل عن أي شاليه.." value={userInput} onChangeText={setUserInput} />
@@ -79,17 +78,16 @@ export default function MalathChat() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
-  chatContainer:           { flex: 1, backgroundColor: "#FFF" },
-  chatHeader:              { padding: 20, borderBottomWidth: 1, borderBottomColor: "#F0F0F0", alignItems: 'center', backgroundColor: '#FFF' },
-  chatHeaderTitle:         { fontSize: 17, fontWeight: "800", color: "#6A0DAD", letterSpacing: 0.5 },
+  chatContainer: { flex: 1, backgroundColor: "#FFF" },
+  chatHeader: { padding: 20, borderBottomWidth: 1, borderBottomColor: "#F0F0F0", alignItems: 'center', backgroundColor: '#FFF' },
+  chatHeaderTitle: { fontSize: 17, fontWeight: "800", color: "#6A0DAD", letterSpacing: 0.5 },
   backgroundIconContainer: { ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center', zIndex: -1 },
-  userBubble:              { backgroundColor: "#6A0DAD", alignSelf: "flex-end", padding: 14, borderRadius: 18, borderBottomRightRadius: 2, marginBottom: 12, maxWidth: "85%", elevation: 1, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 1 },
-  aiBubble:                { backgroundColor: "#F2F2F7", alignSelf: "flex-start", padding: 14, borderRadius: 18, borderBottomLeftRadius: 2, marginBottom: 12, maxWidth: "85%" },
-  userText:                { color: "#FFF", textAlign: "right", fontSize: 15, lineHeight: 20 },
-  aiText:                  { color: "#1C1C1E", fontSize: 15, lineHeight: 20, textAlign: 'right' },
-  inputArea:               { flexDirection: "row-reverse", padding: 15, borderTopWidth: 1, borderTopColor: "#F0F0F0", alignItems: "center", backgroundColor: '#FFF', paddingBottom: Platform.OS === 'ios' ? 30 : 15 },
-  chatInput:               { flex: 1, backgroundColor: "#F2F2F7", borderRadius: 25, paddingHorizontal: 20, height: 45, textAlign: "right", fontSize: 15 },
-  sendButton:              { backgroundColor: "#6A0DAD", width: 45, height: 45, borderRadius: 22.5, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
+  userBubble: { backgroundColor: "#6A0DAD", alignSelf: "flex-end", padding: 14, borderRadius: 18, borderBottomRightRadius: 2, marginBottom: 12, maxWidth: "85%", elevation: 1, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 1 },
+  aiBubble: { backgroundColor: "#F2F2F7", alignSelf: "flex-start", padding: 14, borderRadius: 18, borderBottomLeftRadius: 2, marginBottom: 12, maxWidth: "85%" },
+  userText: { color: "#FFF", textAlign: "right", fontSize: 15, lineHeight: 20 },
+  aiText: { color: "#1C1C1E", fontSize: 15, lineHeight: 20, textAlign: 'right' },
+  inputArea: { flexDirection: "row-reverse", padding: 15, borderTopWidth: 1, borderTopColor: "#F0F0F0", alignItems: "center", backgroundColor: '#FFF', paddingBottom: Platform.OS === 'ios' ? 30 : 15 },
+  chatInput: { flex: 1, backgroundColor: "#F2F2F7", borderRadius: 25, paddingHorizontal: 20, height: 45, textAlign: "right", fontSize: 15 },
+  sendButton: { backgroundColor: "#6A0DAD", width: 45, height: 45, borderRadius: 22.5, justifyContent: 'center', alignItems: 'center', marginRight: 10 },
 });

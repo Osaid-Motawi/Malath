@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 type StateType = 'no_city' | 'no_search' | 'error'|'loading_failed';
 interface StateConfig {
   icon: string;
@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 24,
-  },btn: {backgroundColor: '#4F2396', 
+  },btn: {backgroundColor: '#6A0DAD', 
     paddingHorizontal: 28,
     paddingVertical: 12,
     borderRadius: 12,
-    shadowColor: '#4F2396',
+    shadowColor: '#6A0DAD',
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 3,

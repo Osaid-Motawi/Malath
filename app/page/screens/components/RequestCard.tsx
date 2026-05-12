@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
 
   acceptBtn: {
-    backgroundColor: "#4F2396",
+    backgroundColor: "#6A0DAD",
   },
 
   rejectBtn: {
