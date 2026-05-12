@@ -1,29 +1,59 @@
-import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import React, { useCallback } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Notification } from "../../services/notificationService";
-import { useNotifications } from "../../../../hooks/useNotifications";
 
-const TYPE_ICON: Record<string, { name: any; color: string }> = {
-  favorite: { name: "heart",  color: "#EF4444" },
-  chalet_pending: { name: "time-outline", color: "#F59E0B" },
-  chalet_approved:  { name: "checkmark-circle", color: "#16A34A" },
-  chalet_rejected:  { name: "close-circle", color: "#DC2626" },
-  booking_pending:  { name: "time-outline", color: "#F59E0B" },
-  booking_approved: { name: "calendar", color: "#16A34A" },
-  booking_rejected: { name: "calendar-outline", color: "#DC2626" },
-};
+import { useNotifications } from "../../../../hooks/useNotifications";
+import { Notification } from "../../services/notificationService";
+
+import {
+  CalendarIcon,
+  CheckCircleIcon,
+  NotificationIcon,
+  TimeIcon,
+  XCircleIcon,
+} from "../components/CustomIcon";
+
+const PURPLE = "#6A0DAD";
 
 function formatDate(ts: any): string {
   if (!ts?.toDate) return "";
+
   const d = ts.toDate();
-  return d.toLocaleDateString("ar-EG", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+
+  return d.toLocaleDateString("ar-EG", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function getNotificationIcon(type: string) {
+  if (type === "chalet_pending") return <TimeIcon color="#F59E0B" />;
+  if (type === "chalet_approved") return <CheckCircleIcon color="#16A34A" />;
+  if (type === "chalet_rejected") return <XCircleIcon color="#DC2626" />;
+  if (type === "booking_pending") return <TimeIcon color="#F59E0B" />;
+  if (type === "booking_approved") return <CalendarIcon color="#16A34A" />;
+  if (type === "booking_rejected") return <CalendarIcon color="#DC2626" />;
+  return <NotificationIcon color="#6B7280" />;
+}
+
+function getNotificationBg(type: string) {
+  if (type === "chalet_pending" || type === "booking_pending") return "#FEF3C7";
+  if (type === "chalet_approved" || type === "booking_approved") return "#DCFCE7";
+  if (type === "chalet_rejected" || type === "booking_rejected") return "#FEE2E2";
+  return "#E5E7EB";
 }
 
 export default function NotificationPage() {
-  const { notifications, loading, unreadCount, load, handleMarkAsRead, handleMarkAllAsRead } = useNotifications();
+  const {
+    notifications,
+    loading,
+    load,
+    handleMarkAsRead,
+    handleMarkAllAsRead,
+  } = useNotifications();
 
   useFocusEffect(
     useCallback(() => {
@@ -31,59 +61,53 @@ export default function NotificationPage() {
     }, [load])
   );
 
-  function renderItem({ item }: { item: Notification }) {
-    const icon = TYPE_ICON[item.type] ?? { name: "notifications-outline", color: "#6B7280" };
+  const renderItem = ({ item }: { item: Notification }) => {
+    const unread = item.read_status !== true;
 
     return (
       <TouchableOpacity
-        style={[styles.card, !item.read_status && styles.cardUnread]}
+        activeOpacity={0.9}
         onPress={() => handleMarkAsRead(item.id)}
-        activeOpacity={0.7}
+        style={[styles.card, unread && styles.unreadCard]}
       >
-        <View style={[styles.iconWrap, { backgroundColor: icon.color + "18" }]}>
-          <Ionicons name={icon.name} size={22} color={icon.color} />
+        <View style={[styles.iconBox, { backgroundColor: getNotificationBg(item.type) }]}>
+          {getNotificationIcon(item.type)}
         </View>
 
-        <View style={styles.cardBody}>
-          <Text style={[styles.message, !item.read_status && styles.messageUnread]}>
-            {item.message}
-          </Text>
+        <View style={styles.content}>
+          <Text style={styles.message}>{item.message}</Text>
           <Text style={styles.date}>{formatDate(item.created_at)}</Text>
         </View>
-
-        {!item.read_status && <View style={styles.dot} />}
       </TouchableOpacity>
     );
-  }
+  };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        {unreadCount > 0 ? (
-          <TouchableOpacity onPress={handleMarkAllAsRead}>
-            <Text style={styles.markAll}>قراءة الكل</Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={{ width: 70 }} />
-        )}
+        <TouchableOpacity
+          onPress={() => router.push("/")}
+          style={styles.backButton}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.backArrow}>←</Text>
+        </TouchableOpacity>
 
-        <View style={styles.titleWrap}>
-          <Text style={styles.headerTitle}>الإشعارات</Text>
-          {unreadCount > 0 && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{unreadCount}</Text>
-            </View>
-          )}
-        </View>
+        <Text style={styles.headerTitle}>الإشعارات</Text>
+      </View>
+
+      <View style={styles.readAllContainer}>
+        <TouchableOpacity style={styles.readAllButton} onPress={handleMarkAllAsRead}>
+          <Text style={styles.readAllText}>قراءة الكل</Text>
+        </TouchableOpacity>
       </View>
 
       {loading ? (
-        <ActivityIndicator style={{ marginTop: 40 }} size="large" color="#4F2396" />
+        <ActivityIndicator size="large" color={PURPLE} style={{ marginTop: 50 }} />
       ) : notifications.length === 0 ? (
         <View style={styles.empty}>
-          <Ionicons name="notifications-off-outline" size={64} color="#D1D5DB" />
-          <Text style={styles.emptyTitle}>ما في إشعارات</Text>
-          <Text style={styles.emptySubtitle}>ما وصلك أي إشعار بعد</Text>
+          <NotificationIcon color="#9CA3AF" />
+          <Text style={styles.emptyText}>لا توجد إشعارات</Text>
         </View>
       ) : (
         <FlatList
@@ -100,22 +124,20 @@ export default function NotificationPage() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F9FAFB" },
-  header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 14, backgroundColor: "#fff", borderBottomWidth: 1, borderBottomColor: "#F3F4F6" },
-  titleWrap: { flexDirection: "row", alignItems: "center", gap: 6 },
-  headerTitle: { fontSize: 18, fontWeight: "700", color: "#111827" },
-  badge: { backgroundColor: "#4F2396", borderRadius: 10, paddingHorizontal: 7, paddingVertical: 2 },
-  badgeText: { color: "#fff", fontSize: 11, fontWeight: "700" },
-  markAll: { fontSize: 13, color: "#4F2396", fontWeight: "600" },
-  list: { padding: 16, gap: 10 },
-  card: { flexDirection: "row", alignItems: "center", gap: 12, backgroundColor: "#fff", borderRadius: 14, padding: 14, elevation: 1, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4 },
-  cardUnread: { backgroundColor: "#F5F0FF" },
-  iconWrap: { width: 44, height: 44, borderRadius: 12, justifyContent: "center", alignItems: "center" },
-  cardBody: { flex: 1, gap: 4 },
-  message: { fontSize: 13, color: "#374151", textAlign: "right", lineHeight: 20 },
-  messageUnread: { fontWeight: "700", color: "#111827" },
-  date: { fontSize: 11, color: "#9CA3AF", textAlign: "right" },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#4F2396" },
-  empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: 10 },
-  emptyTitle: { fontSize: 17, fontWeight: "700", color: "#374151" },
-  emptySubtitle: { fontSize: 13, color: "#9CA3AF" },
+  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 20, paddingTop: 10, paddingBottom: 14, borderBottomWidth: 1, borderBottomColor: "#E5E7EB" },
+  backButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: "#F4ECFF", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "#E6D7FF" },
+  backArrow: { fontSize: 24, fontWeight: "900", color: PURPLE },
+  headerTitle: { fontSize: 30, fontWeight: "900", color: PURPLE },
+  readAllContainer: { alignItems: "center", marginTop: 18, marginBottom: 18 },
+  readAllButton: { borderWidth: 2, borderColor: PURPLE, borderRadius: 14, paddingHorizontal: 18, paddingVertical: 6, backgroundColor: "#FFFFFF" },
+  readAllText: { fontSize: 16, fontWeight: "900", color: PURPLE },
+  list: { paddingHorizontal: 16, paddingBottom: 30 },
+  card: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", borderRadius: 24, padding: 18, marginBottom: 16 },
+  unreadCard: { backgroundColor: "#F3F4F6", borderWidth: 1, borderColor: "#E9D5FF" },
+  iconBox: { width: 56, height: 56, borderRadius: 18, justifyContent: "center", alignItems: "center" },
+  content: { flex: 1, marginRight: 14 },
+  message: { fontSize: 15, fontWeight: "800", color: "#1F2937", textAlign: "right", lineHeight: 26 },
+  date: { marginTop: 8, fontSize: 13, fontWeight: "600", color: "#9CA3AF", textAlign: "right" },
+  empty: { flex: 1, justifyContent: "center", alignItems: "center" },
+  emptyText: { marginTop: 10, fontSize: 18, fontWeight: "700", color: "#9CA3AF" },
 });

@@ -11,21 +11,30 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import { AMENITY_LABELS, CITIES, FormData } from "../constants/chaletForm";
 import { useChaletForm } from "../hooks/useChaletForm";
 import FormField from "./page/screens/components/FormField";
 
 export default function AddEditChaletScreen() {
   const { chaletId } = useLocalSearchParams<{ chaletId?: string }>();
-  const { form, loading, saving, isEdit, setField, toggleAmenity, handleSave } =
-    useChaletForm(chaletId);
+
+  const {
+    form,
+    loading,
+    saving,
+    isEdit,
+    setField,
+    toggleAmenity,
+    handleSave,
+  } = useChaletForm(chaletId);
 
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
         <ActivityIndicator
           size="large"
-          color="#517c63"
+          color="#6A0DAD"
           style={{ marginTop: 60 }}
         />
       </SafeAreaView>
@@ -34,14 +43,20 @@ export default function AddEditChaletScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
+      
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#111827" />
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backBtn}
+        >
+          <Text style={styles.backArrow}>←</Text>
         </TouchableOpacity>
+
         <Text style={styles.headerTitle}>
           {isEdit ? "تعديل الشاليه" : "إضافة شاليه"}
         </Text>
-        <View style={{ width: 24 }} />
+
+        <View style={{ width: 44 }} />
       </View>
 
       <ScrollView
@@ -49,18 +64,24 @@ export default function AddEditChaletScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.section}>المعلومات الأساسية</Text>
+
         <FormField
           label="اسم الشاليه *"
           placeholder="مثال: شاليه الورود"
           value={form.name}
           onChangeText={(v) => setField("name", v)}
         />
+
         <Text style={styles.section}>المدينة *</Text>
+
         <View style={styles.amenities}>
           {CITIES.map((city) => (
             <TouchableOpacity
               key={city}
-              style={[styles.chip, form.location === city && styles.chipActive]}
+              style={[
+                styles.chip,
+                form.location === city && styles.chipActive,
+              ]}
               onPress={() => setField("location", city)}
             >
               <Text
@@ -82,6 +103,7 @@ export default function AddEditChaletScreen() {
           onChangeText={(v) => setField("price", v)}
           keyboardType="numeric"
         />
+
         <FormField
           label="السعة (عدد الأشخاص) *"
           placeholder="10"
@@ -91,6 +113,7 @@ export default function AddEditChaletScreen() {
         />
 
         <Text style={styles.section}>تفاصيل إضافية</Text>
+
         <FormField
           label="الوصف"
           placeholder="اكتب وصفاً مختصراً"
@@ -98,6 +121,7 @@ export default function AddEditChaletScreen() {
           onChangeText={(v) => setField("description", v)}
           multiline
         />
+
         <View style={styles.row}>
           <FormField
             label="عدد الغرف"
@@ -107,6 +131,7 @@ export default function AddEditChaletScreen() {
             keyboardType="numeric"
             flex
           />
+
           <FormField
             label="عدد الحمامات"
             placeholder="2"
@@ -116,6 +141,7 @@ export default function AddEditChaletScreen() {
             flex
           />
         </View>
+
         <FormField
           label="الخصم (%)"
           placeholder="10"
@@ -123,6 +149,7 @@ export default function AddEditChaletScreen() {
           onChangeText={(v) => setField("discount", v)}
           keyboardType="numeric"
         />
+
         <FormField
           label="رابط الصورة"
           placeholder="https://..."
@@ -131,12 +158,16 @@ export default function AddEditChaletScreen() {
         />
 
         <Text style={styles.section}>المرافق</Text>
+
         <View style={styles.amenities}>
           {(Object.keys(form.amenities) as (keyof FormData["amenities"])[]).map(
             (key) => (
               <TouchableOpacity
                 key={key}
-                style={[styles.chip, form.amenities[key] && styles.chipActive]}
+                style={[
+                  styles.chip,
+                  form.amenities[key] && styles.chipActive,
+                ]}
                 onPress={() => toggleAmenity(key)}
               >
                 <Text
@@ -147,26 +178,32 @@ export default function AddEditChaletScreen() {
                 >
                   {AMENITY_LABELS[key]}
                 </Text>
+
                 {form.amenities[key] && (
                   <Ionicons name="checkmark" size={14} color="#fff" />
                 )}
               </TouchableOpacity>
-            ),
+            )
           )}
         </View>
 
         {isEdit && (
           <>
             <Text style={styles.section}>حالة الشاليه</Text>
+
             <View style={styles.statusRow}>
               <Switch
                 value={form.status === "booked"}
                 onValueChange={(v) =>
                   setField("status", v ? "booked" : "available")
                 }
-                trackColor={{ false: "#86efac", true: "#FCA5A5" }}
+                trackColor={{
+                  false: "#C4F1D0",
+                  true: "#FECACA",
+                }}
                 thumbColor="#fff"
               />
+
               <Text style={styles.statusLabel}>
                 {form.status === "booked" ? "محجوز" : "متاح"}
               </Text>
@@ -193,61 +230,131 @@ export default function AddEditChaletScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F9FAFB" },
+  
+  container: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+  },
+
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
+    paddingHorizontal: 18,
     paddingVertical: 14,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: "#F3F4F6",
   },
-  headerTitle: { fontSize: 17, fontWeight: "700", color: "#111827" },
-  scroll: { padding: 16, paddingBottom: 40, gap: 10 },
+
+  backBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#F4ECFF",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#E6D7FF",
+  },
+
+  backArrow: {
+    fontSize: 26,
+    fontWeight: "900",
+    color: "#6A0DAD",
+    lineHeight: 28,
+  },
+
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "900",
+    color: "#6A0DAD",
+  },
+
+  scroll: {
+    padding: 18,
+    paddingBottom: 40,
+    gap: 10,
+  },
+
   section: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#4F2396",
-    marginTop: 10,
-    marginBottom: 4,
+    fontSize: 16,
+    fontWeight: "800",
+    color: "#6A0DAD",
+    marginTop: 12,
+    marginBottom: 6,
     textAlign: "right",
   },
-  row: { flexDirection: "row", gap: 10 },
-  amenities: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+
+  row: {
+    flexDirection: "row",
+    gap: 10,
+  },
+
+  amenities: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+
   chip: {
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    borderWidth: 1,
-    borderColor: "#E5E7EB",
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    backgroundColor: "#fff",
+    borderWidth: 1.5,
+    borderColor: "#E9D5FF",
+    borderRadius: 22,
+    paddingHorizontal: 15,
+    paddingVertical: 9,
+    backgroundColor: "#FFFFFF",
   },
-  chipActive: { backgroundColor: "#4F2396", borderColor: "#4F2396" },
-  chipText: { fontSize: 13, color: "#374151" },
-  chipTextActive: { color: "#fff", fontWeight: "600" },
+
+  chipActive: {
+    backgroundColor: "#6A0DAD",
+    borderColor: "#6A0DAD",
+  },
+
+  chipText: {
+    fontSize: 13,
+    color: "#4B5563",
+    fontWeight: "600",
+  },
+
+  chipTextActive: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+  },
+
   statusRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
     gap: 10,
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 14,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
+    padding: 16,
     borderWidth: 1,
     borderColor: "#E5E7EB",
   },
-  statusLabel: { fontSize: 14, fontWeight: "600", color: "#374151" },
-  saveBtn: {
-    backgroundColor: "#4F2396",
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: "center",
-    marginTop: 16,
+
+  statusLabel: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#374151",
   },
-  saveBtnText: { color: "#fff", fontWeight: "700", fontSize: 16 },
+
+  saveBtn: {
+    backgroundColor: "#6A0DAD",
+    borderRadius: 18,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+
+  saveBtnText: {
+    color: "#FFFFFF",
+    fontWeight: "800",
+    fontSize: 16,
+  },
 });

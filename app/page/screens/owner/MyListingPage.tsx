@@ -30,7 +30,7 @@ export default function MyListingPage() {
       ) : chalets.length === 0 ? (
         <View style={styles.empty}>
           <Ionicons name="home-outline" size={64} color="#D1D5DB" />
-          <Text style={styles.emptyTitle}>ما في شاليهات بعد</Text>
+          <Text style={styles.emptyTitle}>ما في شاليهات مضيوفة</Text>
           <Text style={styles.emptySubtitle}>ابدأ بإضافة شاليهك الأول</Text>
           <TouchableOpacity style={styles.addBtn} onPress={handleAdd}>
             <Text style={styles.addBtnText}>+ أضف شاليه</Text>
@@ -54,8 +54,8 @@ export default function MyListingPage() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F9FAFB" },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 14, backgroundColor: "#fff", borderBottomWidth: 1, borderBottomColor: "#F3F4F6" },
-  headerTitle: { fontSize: 18, fontWeight: "700", color: "#111827" },
-  addBtn: { flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: "#4F2396", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10 },
+  headerTitle: { fontSize: 26, fontWeight: "700", color: "#6A0DAD" },
+  addBtn: { flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: "#6A0DAD", paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10 },
   addBtnText: { color: "#fff", fontWeight: "600", fontSize: 14 },
   list: { padding: 16, gap: 14 },
   empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: 10 },

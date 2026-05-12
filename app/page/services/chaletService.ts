@@ -1,6 +1,8 @@
 import {
-  addDoc, collection, deleteDoc, doc, getDocs,
-  query, updateDoc, where, getDoc,
+  addDoc, collection, deleteDoc, doc,
+  getDoc,
+  getDocs,
+  query, updateDoc, where,
 } from "firebase/firestore";
 import { db } from "../../../FirebaseConfig";
 import StorageService from "./StorageService";
@@ -8,7 +10,6 @@ import { addNotification } from "./notificationService";
 
 export type ChaletStatus = "available" | "booked";
 export type ChaletApprovalStatus = "pending" | "approved" | "rejected";
-
 export interface Chalet {
   id: string;
   ownerId: string;
@@ -21,22 +22,33 @@ export interface Chalet {
   images: string[];
   capacity: number;
   description?: string;
+
   amenities?: {
     Kitchen?: boolean;
     Parking?: boolean;
     Pool?: boolean;
     WiFi?: boolean;
   };
+
   photo?: {
-    photoA?: string; photoB?: string; photoC?: string; photoD?: string;
-    photoE?: string; photoF?: string; photoG?: string; photoH?: string;
+    photoA?: string;
+    photoB?: string;
+    photoC?: string;
+    photoD?: string;
+    photoE?: string;
+    photoF?: string;
+    photoG?: string;
+    photoH?: string;
   };
+
   bedrooms?: number;
   bathrooms?: number;
   discount?: number;
-  status?: "available" | "booked";
-}
 
+  status?: "available" | "booked";
+
+  approvalStatus: "pending" | "approved" | "rejected";
+}
 export const getChalets = async (): Promise<Chalet[]> => {
   const q = query(collection(db, "chalets"), where("approvalStatus", "==", "approved"));
   const snapshot = await getDocs(q);

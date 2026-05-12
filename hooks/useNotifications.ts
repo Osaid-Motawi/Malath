@@ -9,7 +9,8 @@ export function useNotifications() {
   const load = useCallback(async () => {
     try {
       setLoading(true);
-      setNotifications(await getMyNotifications());
+      const data = await getMyNotifications();
+      setNotifications(data);
     } catch {
       Alert.alert("خطأ", "فشل تحميل الإشعارات");
     } finally {
@@ -19,17 +20,32 @@ export function useNotifications() {
 
   const handleMarkAsRead = async (id: string) => {
     await markAsRead(id);
+
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read_status: true } : n))
+      prev.map((n) =>
+        n.id === id ? { ...n, read_status: true } : n
+      )
     );
   };
 
   const handleMarkAllAsRead = async () => {
     await markAllAsRead();
-    setNotifications((prev) => prev.map((n) => ({ ...n, read_status: true })));
+
+    setNotifications((prev) =>
+      prev.map((n) => ({ ...n, read_status: true }))
+    );
   };
 
-  const unreadCount = notifications.filter((n) => !n.read_status).length;
+  const unreadCount = notifications.filter(
+    (n) => n.read_status === false
+  ).length;
 
-  return { notifications, loading, unreadCount, load, handleMarkAsRead, handleMarkAllAsRead };
+  return {
+    notifications,
+    loading,
+    unreadCount,
+    load,
+    handleMarkAsRead,
+    handleMarkAllAsRead,
+  };
 }

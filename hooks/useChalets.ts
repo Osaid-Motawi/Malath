@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../FirebaseConfig";
+import { useEffect, useState } from "react";
 import { Chalet } from "../app/page/services/chaletService";
 import {
   addFavorite,
@@ -8,6 +7,7 @@ import {
   removeFavorite,
 } from "../app/page/services/favoriteService";
 import StorageService from "../app/page/services/StorageService";
+import { db } from "../FirebaseConfig";
 
 export const useChalets = () => {
   const [chalets, setChalets] = useState<Chalet[]>([]);
@@ -17,12 +17,14 @@ export const useChalets = () => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "chalets"), (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Chalet[];
+const data = snapshot.docs
+  .map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }))
+  .filter((chalet: any) => chalet.approvalStatus === "approved") as Chalet[];
 
-      setChalets(data);
+setChalets(data);
     });
 
     return () => unsubscribe();
