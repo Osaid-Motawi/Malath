@@ -4,7 +4,7 @@ import React, { useCallback } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMyChalets } from "../../../../hooks/useMyChalets";
-import OwnerChaletCard from "../components/MyListingCard";
+import MyListingCard from "../components/MyListingCard";
 
 export default function MyListingPage() {
   const { chalets, loading, load, handleAdd, handleEdit, handleDelete } = useMyChalets();
@@ -41,7 +41,7 @@ export default function MyListingPage() {
           data={chalets}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <OwnerChaletCard item={item} onEdit={handleEdit} onDelete={handleDelete} />
+            <MyListingCard item={item} onEdit={handleEdit} onDelete={handleDelete} />
           )}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}

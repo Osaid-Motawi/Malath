@@ -9,7 +9,7 @@ type Props = {
   onDelete: (chalet: Chalet) => void;
 };
 
-export default function OwnerChaletCard({ item, onEdit, onDelete }: Props) {
+export default function MyListingCard({ item, onEdit, onDelete }: Props) {
   const isBooked = item.status === "booked";
 
   return (
