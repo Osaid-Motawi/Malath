@@ -19,17 +19,19 @@ export const CloseIcon = ({ size = 22, color = "#000" }) => (
 export const DeerIcon = ({ size = 28 }) => (
   <Text style={{ fontSize: size }}>🦌</Text>
 );
-const BackIcon = () => (
-  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+
+export const BackIcon = ({ size = 24, color = "#4F2396" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path
       d="M15 6L9 12L15 18"
-      stroke="#4F2396"
+      stroke={color}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
   </Svg>
 );
+
 export const HomeIcon = ({ size = 24, color = "#000" }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">
     <Path
@@ -372,5 +374,64 @@ export const LogoIcon = () => (
   <Svg width="60" height="60" viewBox="0 0 24 24">
     <Circle cx="12" cy="12" r="12" fill="#fff" />
     <Path d="M12 3C7 3 3 7 3 12s4 9 9 9 9-4 9-9-4-9-9-9zm0 4l5 8H7l5-8z" fill="#2C6FBF" />
+  </Svg>
+);
+export const CameraIcon = ({ size = 18, color = "#fff" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M4 7h4l2-2h4l2 2h4v12H4V7z"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinejoin="round"
+    />
+    <Circle cx="12" cy="13" r="3" stroke={color} strokeWidth="2" fill="none" />
+  </Svg>
+);
+
+export const ImageIcon = ({ size = 18, color = "#4F2396" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Rect x="3" y="5" width="18" height="14" rx="2" stroke={color} strokeWidth="2" />
+    <Circle cx="9" cy="10" r="2" fill={color} />
+    <Path d="M21 16l-5-5-7 7" stroke={color} strokeWidth="2" />
+  </Svg>
+);
+export const EditProfileIcon = ({ size = 20, color = "#4F2396" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0 0-3L17.5 5.5a2.1 2.1 0 0 0-3 0L4 16v4z"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path d="M13.5 7.5l3 3" stroke={color} strokeWidth="2" strokeLinecap="round" />
+  </Svg>
+);
+
+export const ProfileHeartIcon = ({ size = 20, color = "#4F2396" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M12 21s-8-5.2-8-12a4.8 4.8 0 0 1 8-3.5A4.8 4.8 0 0 1 20 9c0 6.8-8 12-8 12z"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+export const ProfileBookingIcon = ({ size = 20, color = "#4F2396" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M3 11l9-7 9 7" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="M5 10v10h14V10" stroke={color} strokeWidth="2" strokeLinejoin="round" />
+    <Path d="M9 20v-6h6v6" stroke={color} strokeWidth="2" strokeLinejoin="round" />
+  </Svg>
+);
+
+export const ProfileDashboardIcon = ({ size = 20, color = "#4F2396" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Rect x="4" y="4" width="6" height="6" rx="1" stroke={color} strokeWidth="2" />
+    <Rect x="14" y="4" width="6" height="6" rx="1" stroke={color} strokeWidth="2" />
+    <Rect x="4" y="14" width="6" height="6" rx="1" stroke={color} strokeWidth="2" />
+    <Rect x="14" y="14" width="6" height="6" rx="1" stroke={color} strokeWidth="2" />
   </Svg>
 );
