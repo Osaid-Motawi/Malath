@@ -45,9 +45,8 @@ export interface Chalet {
   bathrooms?: number;
   discount?: number;
 
-  status?: "available" | "booked";
-
-  approvalStatus: "pending" | "approved" | "rejected";
+  status?: ChaletStatus;
+  approvalStatus?: ChaletApprovalStatus;
 }
 export const getChalets = async (): Promise<Chalet[]> => {
   const q = query(collection(db, "chalets"), where("approvalStatus", "==", "approved"));

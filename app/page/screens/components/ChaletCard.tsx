@@ -70,21 +70,22 @@ const ChaletCard = ({ chalet, onPress }: Props) => {
           {chalet.name}
         </Text>
 
-        <Text style={[styles.gray, { textAlign: "right" }]}>{chalet.location}</Text>
-
-        <View style={styles.priceRow}>
+        <View style={styles.locationRow}>
           {discount > 0 ? (
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>%{discount} خصم</Text>
+              <Text style={styles.badgeText}> خصم %{discount}</Text>
             </View>
           ) : (
-            <View />
-          )}
-
+            <View />)}
+          <Text style={styles.locationText}>{chalet.location}</Text>
+        </View>
+        <View style={styles.priceRow}><View />
           <View style={styles.priceRight}>
             <Text style={styles.gray}>/ليلة</Text>
             <Text style={styles.price}>{chalet.price} ₪</Text>
-            {originalPrice && <Text style={styles.oldPrice}>{originalPrice}</Text>}
+            {originalPrice && (
+              <Text style={styles.oldPrice}>{originalPrice} ₪</Text>
+            )}
           </View>
         </View>
       </View>
@@ -93,28 +94,26 @@ const ChaletCard = ({ chalet, onPress }: Props) => {
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#fff", borderRadius: 12, marginBottom: 14,
-    shadowColor: "#000", shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06, shadowRadius: 6, elevation: 2, overflow: "hidden",
-  },
-  imgWrapper: { borderTopLeftRadius: 12, borderTopRightRadius: 12, overflow: "hidden" },
-  heartBtn: { position: "absolute", top: 10, right: 10,
-    width: 34, height: 34, justifyContent: "center", alignItems: "center" },
-  info: { paddingHorizontal: 11, paddingTop: 9, paddingBottom: 11, gap: 4 },
-  topRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  capacityBox: { flexDirection: "row", alignItems: "center", gap: 4 },
-  capacityText: { fontSize: 13, color: "#6B7280" },
-  ratingRow: { flexDirection: "row", alignItems: "center", gap: 4 },
-  star: { fontSize: 13, color: "#000000" },
-  gray: { fontSize: 12, color: "#6B7280" },
-  name: { fontSize: 15, fontWeight: "700", color: "#111827", textAlign: "right", lineHeight: 22 },
-  priceRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
-  badge: { backgroundColor: "#4F2396", borderRadius: 8, paddingHorizontal: 5, paddingVertical: 3 },
-  badgeText: { color: "#fff", fontSize: 11, fontWeight: "700" },
-  priceRight: { flexDirection: "row", alignItems: "baseline", gap: 4 },
-  oldPrice: { fontSize: 12, color: "#9CA3AF", textDecorationLine: "line-through" },
-  price: { fontSize: 15, fontWeight: "700", color: "#111827" },
+card: { backgroundColor: "#FFFFFF", borderRadius: 12, borderWidth: 1, borderColor: "#E9DDFB", marginBottom: 14, shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 6, elevation: 2, overflow: "hidden" },
+imgWrapper: { borderTopLeftRadius: 12, borderTopRightRadius: 12, overflow: "hidden" },
+image: { width: "100%", aspectRatio: 4 / 3, backgroundColor: "#E5E7EB" },
+emptyImage: { width: "100%", aspectRatio: 4 / 3, backgroundColor: "#E5E7EB" },
+heartBtn: { position: "absolute", top: 10, right: 10, width: 34, height: 34, justifyContent: "center", alignItems: "center" },
+info: { paddingHorizontal: 11, paddingTop: 9, paddingBottom: 11, gap: 4 },
+topRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+capacityBox: { flexDirection: "row", alignItems: "center", gap: 4 },
+capacityText: { fontSize: 13, color: "#6B7280" },
+ratingRow: { flexDirection: "row", alignItems: "center", gap: 4 },
+star: { fontSize: 13, color: "#000000" },
+gray: { fontSize: 12, color: "#6B7280" },
+name: { fontSize: 15, fontWeight: "700", color: "#111827", textAlign: "right", lineHeight: 22 },
+locationRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 2 },
+locationText: { fontSize: 12, color: "#6B7280", textAlign: "right", flex: 1 },
+badge: { backgroundColor: "#6A0DAD", borderRadius: 10, paddingHorizontal: 8, paddingVertical: 2, marginRight: 6 },
+badgeText: { color: "#FFFFFF", fontSize: 11, fontWeight: "700" },
+priceRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4 },
+priceRight: { flexDirection: "row", alignItems: "baseline", gap: 4 },
+oldPrice: { fontSize: 12, color: "#9CA3AF", textDecorationLine: "line-through" },
+price: { fontSize: 15, fontWeight: "700", color: "#111827" },
 });
-
 export default ChaletCard;

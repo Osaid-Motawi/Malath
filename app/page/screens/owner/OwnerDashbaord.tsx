@@ -43,7 +43,8 @@ export default function OwnerDashboard() {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#6A0DAD" />
+                    <Text style={styles.backArrow}>←</Text>
+            
           </TouchableOpacity>
 
           <Text style={styles.title}>Owner Dashboard</Text>
@@ -115,84 +116,17 @@ export default function OwnerDashboard() {
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: "#F4F3F8",
-  },
-
-  container: {
-    padding: 16,
-    paddingBottom: 40,
-  },
-
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 18,
-  },
-
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#EDE9FE",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#6A0DAD",
-  },
-
-  statsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 22,
-  },
-
-  statCard: {
-    flex: 1,
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 14,
-    alignItems: "center",
-    elevation: 2,
-  },
-
-  statNumber: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#6A0DAD",
-  },
-
-  statText: {
-    fontSize: 12,
-    color: "#6B7280",
-    marginTop: 4,
-  },
-
-  section: {
-    fontSize: 17,
-    fontWeight: "bold",
-    color: "#111827",
-    marginBottom: 10,
-    marginTop: 8,
-    textAlign: "right",
-  },
-
-  emptyBox: {
-    backgroundColor: "#fff",
-    borderRadius: 14,
-    padding: 18,
-    marginBottom: 20,
-    alignItems: "center",
-  },
-
-  emptyText: {
-    color: "#9CA3AF",
-    fontSize: 14,
-  },
+  safe: {flex: 1,backgroundColor: "#F4F3F8",},
+  container: { padding: 16,paddingBottom: 40,},
+  header: {flexDirection: "row",alignItems: "center",justifyContent: "space-between",marginBottom: 18,},
+  title: {fontSize: 22,fontWeight: "bold",color: "#6A0DAD",},
+  statsRow: {flexDirection: "row",gap: 12,marginBottom: 22,},
+  statCard: { flex: 1, backgroundColor: "#fff", borderRadius: 16, padding: 14, alignItems: "center", elevation: 2,},
+  statNumber: { fontSize: 24, fontWeight: "bold", color: "#6A0DAD",},
+  statText: { fontSize: 12, color: "#6B7280", marginTop: 4,},
+  section: {fontSize: 17,fontWeight: "bold",color: "#111827",marginBottom: 10,marginTop: 8,textAlign: "right",},
+  emptyBox: { backgroundColor: "#fff",borderRadius: 14,padding: 18,marginBottom: 20, alignItems: "center",},
+  emptyText: {color: "#9CA3AF",fontSize: 14,},
+  backBtn: {width: 44,height: 44,borderRadius: 22,backgroundColor: "#F4ECFF",justifyContent: "center",alignItems: "center",borderWidth: 1,borderColor: "#E6D7FF",},
+  backArrow: {fontSize: 26,fontWeight: "900",color: "#6A0DAD",lineHeight: 28,},
 });
