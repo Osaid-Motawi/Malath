@@ -124,5 +124,7 @@ const styles = StyleSheet.create({
   button: {backgroundColor: "#4F2396",paddingVertical: 16,borderRadius: 18,alignItems: "center",marginTop: 10,},
   buttonText: {color: "#fff",fontSize: 16,fontWeight: "bold",},
   backBtn: { width: 44,height: 44, borderRadius: 22, backgroundColor: "#F4ECFF", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "#E6D7FF",},
+  error: {color: "#DC2626",textAlign: "center", marginBottom: 10,fontWeight: "600",},
   backArrow: {fontSize: 26,fontWeight: "900",color: "#6A0DAD",lineHeight: 28,},
+  disabledButton: {opacity: 0.6,},
 });
