@@ -42,7 +42,6 @@ function FullView({ title, data, onBack }: any) {
   );
 }
 
-//  HomePage Component
 export default function HomePage() {
   const insets = useSafeAreaInsets();
   const { chalets, loading } = useChalet();
