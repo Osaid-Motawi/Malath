@@ -62,6 +62,7 @@ export default function ForgotPasswordPage() {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        onSubmitEditing={handleContinue}
   />
 
   <TouchableOpacity
