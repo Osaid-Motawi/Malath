@@ -7,13 +7,17 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
 import { useAuth } from "@/hooks/useAuth";
+import { Controller, useForm } from "react-hook-form";
+
+type RegisterFormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
 const RegisterPage = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const lastNameRef = useRef<TextInput>(null);
@@ -23,8 +27,20 @@ const RegisterPage = () => {
 
   const { loading, error, register } = useAuth();
 
-  const handleRegister = async () => {
-    await register(firstName, lastName, email, password, confirmPassword);
+    const {control,handleSubmit,watch,formState: { errors },} = useForm<RegisterFormData>({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const passwordValue = watch("password");
+
+  const handleRegister = async (data: RegisterFormData) => {
+    await register(data.firstName, data.lastName, data.email, data.password, data.confirmPassword);
   };
 return (
     <SafeAreaView style={s.safe}>
@@ -46,66 +62,103 @@ return (
                 <View style={{ flex: 1 }}>
                   <Text style={s.label}>الاسم الأول</Text>
                   <View style={s.inputRow}>
-                    <TextInput
-                      autoFocus
-                      style={s.input}
-                      placeholder="أدخل الاسم الأول"
-                      placeholderTextColor="#999"
-                      value={firstName}
-                      onChangeText={setFirstName}
-                      returnKeyType="next"
-                      onSubmitEditing={() => lastNameRef.current?.focus()}
+                    <Controller
+                      control={control}
+                      name="firstName"
+                      rules={{ required: "First name is required" }}
+                      render={({ field: { onChange, value } }) => (
+                        <TextInput
+                          autoFocus
+                          style={s.input}
+                          placeholder="أدخل الاسم الأول"
+                          placeholderTextColor="#999"
+                          value={value}
+                          onChangeText={onChange}
+                          returnKeyType="next"
+                          onSubmitEditing={() => lastNameRef.current?.focus()}
+                        />
+                      )}
                     />
                   </View>
+                  {errors.firstName && (<Text style={s.error}>{errors.firstName.message}</Text>)}
                 </View>
-
                 <View style={{ flex: 1 }}>
                   <Text style={s.label}>اسم العائلة</Text>
                   <View style={s.inputRow}>
-                    <TextInput
-                      ref={lastNameRef}
-                      style={s.input}
-                      placeholder="أدخل اسم العائلة"
-                      placeholderTextColor="#999"
-                      value={lastName}
-                      onChangeText={setLastName}
-                      returnKeyType="next"
-                      onSubmitEditing={() => emailRef.current?.focus()}
+                    <Controller
+                      control={control}
+                      name="lastName"
+                      rules={{ required: "Last name is required" }}
+                      render={({ field: { onChange, value } }) => (
+                        <TextInput
+                          ref={(ref) => {lastNameRef.current = ref;}}
+                          style={s.input}
+                          placeholder="أدخل اسم العائلة"
+                          placeholderTextColor="#999"
+                          value={value}
+                          onChangeText={onChange}
+                          returnKeyType="next"
+                          onSubmitEditing={() => emailRef.current?.focus()}
+                        />
+                      )}
                     />
                   </View>
+                  {errors.lastName && (<Text style={s.error}>{errors.lastName.message}</Text>)}
                 </View>
               </View>
 
               <Text style={s.label}>البريد الإلكتروني</Text>
 
               <View style={s.inputRow}>
-                <TextInput
-                  ref={emailRef}
-                  style={s.input}
-                  placeholder="أدخل البريد الإلكتروني"
-                  placeholderTextColor="#999"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  value={email}
-                  onChangeText={setEmail}
-                  returnKeyType="next"
-                  onSubmitEditing={() => passwordRef.current?.focus()}
+                <Controller
+                  control={control}
+                  name="email"
+                  rules={{
+                    required: "Email is required",
+                    pattern: { value: /^\S+@\S+\.\S+$/, message: "Invalid email address" },
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                      ref={(ref) => {emailRef.current = ref;}}
+                      style={s.input}
+                      placeholder="أدخل البريد الإلكتروني"
+                      placeholderTextColor="#999"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      value={value}
+                      onChangeText={onChange}
+                      returnKeyType="next"
+                      onSubmitEditing={() => passwordRef.current?.focus()}
+                    />
+                  )}
                 />
               </View>
-
+                {errors.email && (<Text style={s.error}>{errors.email.message}</Text>)}
               <Text style={s.label}>كلمة المرور</Text>
 
               <View style={s.inputRow}>
-                <TextInput
-                  ref={passwordRef}
-                  style={s.input}
-                  placeholder="أدخل كلمة المرور"
-                  placeholderTextColor="#999"
-                  secureTextEntry={!showPassword}
-                  value={password}
-                  onChangeText={setPassword}
-                  returnKeyType="next"
-                  onSubmitEditing={() => confirmPasswordRef.current?.focus()}
+                  <Controller
+                  control={control}
+                  name="password"
+                  rules={{
+                    required: "Password is required",
+                    minLength: { value: 8, message: "Minimum 8 characters" },
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                           ref={(ref) => {
+                      passwordRef.current = ref;
+                    }}
+                      style={s.input}
+                      placeholder="أدخل كلمة المرور"
+                      placeholderTextColor="#999"
+                      secureTextEntry={!showPassword}
+                      value={value}
+                      onChangeText={onChange}
+                      returnKeyType="next"
+                      onSubmitEditing={() => confirmPasswordRef.current?.focus()}
+                    />
+                  )}
                 />
                 <TouchableOpacity
                   onPress={() => setShowPassword(!showPassword)}
@@ -117,22 +170,31 @@ return (
                   )}
                 </TouchableOpacity>
               </View>
-
+                  {errors.password && (<Text style={s.error}>{errors.password.message}</Text>)}
               <Text style={s.label}>تأكيد كلمة المرور</Text>
 
               <View style={s.inputRow}>
-                <TextInput
-                  ref={confirmPasswordRef}
-                  style={s.input}
-                  placeholder="أعد إدخال كلمة المرور"
-                  placeholderTextColor="#999"
-                  secureTextEntry={!showConfirm}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  returnKeyType="done"
-                  onSubmitEditing={handleRegister}
-                />
-
+                <Controller
+                  control={control}
+                  name="confirmPassword"
+                  rules={{
+                    required: "Please confirm your password",
+                    validate: (value) => value === passwordValue || "Passwords do not match",
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextInput
+                      ref={(ref) => { confirmPasswordRef.current =ref;}}
+                      style={s.input}
+                      placeholder="أعد إدخال كلمة المرور"
+                      placeholderTextColor="#999"
+                      secureTextEntry={!showConfirm}
+                      value={value}
+                      onChangeText={onChange}
+                      returnKeyType="done"
+                      onSubmitEditing={handleSubmit(handleRegister)}
+                    />
+                  )}
+              />
                 <TouchableOpacity
                   onPress={() => setShowConfirm(!showConfirm)}
                 >
@@ -143,13 +205,13 @@ return (
                   )}
                 </TouchableOpacity>
               </View>
-
+              {errors.confirmPassword && (<Text style={s.error}>{errors.confirmPassword.message}</Text>)}
               {!!error && <Text style={s.error}>{error}</Text>}
 
               <View style={s.btnRow}>
                 <TouchableOpacity
                   style={[s.btnPrimary, loading && s.btnDisabled]}
-                  onPress={handleRegister}
+                  onPress={handleSubmit(handleRegister)}
                   disabled={loading}
                 >
                   {loading ? (

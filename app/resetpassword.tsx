@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 
 import {
+  ActivityIndicator,
   Alert,
   StyleSheet,
   Text,
@@ -11,42 +12,31 @@ import {
   View,
 } from "react-native";
 
-import { resetPassword } from "./page/services/authService";
-
+import { useAuth } from "@/hooks/useAuth";
 export default function ResetPasswordPage() {
   const { email } = useLocalSearchParams();
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const { resetUserPassword, error, loading } = useAuth();
   const confirmRef = useRef<TextInput>(null);
-  const handleReset = async () => {
-    if (password !== confirm) {
-      Alert.alert(
-        "Error",
-        "Passwords do not match"
-      );
-      return;
-    }
+const handleReset = async () => {
+  const success =
+    await resetUserPassword(
+      email as string,
+      password,
+      confirm
+    );
 
-    try {
-      await resetPassword(
-        email as string,
-        password
-      );
+  if (success) {
+    Alert.alert(
+      "Success",
+      "Password updated"
+    );
 
-      Alert.alert(
-        "Success",
-        "Password updated"
-      );
-
-      router.replace("/login");
-    } catch (error) {
-      Alert.alert(
-        "Error",
-        "Failed to reset password"
-      );
-    }
-  };
+    router.replace("/login");
+  }
+};
 
   return (
 <View style={styles.container}>
@@ -95,14 +85,28 @@ export default function ResetPasswordPage() {
   returnKeyType="done"
   onSubmitEditing={handleReset}
 />
-
+    {!!error && (
+        <Text style={styles.error}>
+          {error}
+        </Text>
+      )}
   <TouchableOpacity
-    style={styles.button}
+    style={[
+          styles.button,
+          loading && styles.disabledButton,
+        ]}
     onPress={handleReset}
+    disabled={loading}
   >
+            {loading ? (
+          <ActivityIndicator
+            color="#fff"
+          />
+        ) : (
     <Text style={styles.buttonText}>
       Save Password
     </Text>
+        )}
   </TouchableOpacity>
 </View>
   );
@@ -135,18 +139,20 @@ const styles = StyleSheet.create({
     color: "#4F2396",
     marginBottom: 8,
   },
-header: {
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  marginBottom: 25,
-},
 
-headerTitle: {
-  fontSize: 20,
-  fontWeight: "bold",
-  color: "#4F2396",
-},
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 25,
+  },
+
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#4F2396",
+  },
+
   input: {
     backgroundColor: "#fff",
     borderRadius: 16,
@@ -161,12 +167,23 @@ headerTitle: {
     elevation: 2,
   },
 
+  error: {
+    color: "#DC2626",
+    textAlign: "center",
+    marginBottom: 10,
+    fontWeight: "600",
+  },
+
   button: {
     backgroundColor: "#4F2396",
     paddingVertical: 16,
     borderRadius: 18,
     alignItems: "center",
     marginTop: 10,
+  },
+
+  disabledButton: {
+    opacity: 0.6,
   },
 
   buttonText: {

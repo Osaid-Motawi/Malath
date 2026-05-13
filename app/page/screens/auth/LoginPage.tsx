@@ -7,18 +7,27 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EyeIcon, EyeOffIcon } from "../components/CustomIcon";
+import { Controller, useForm } from "react-hook-form";
 
+type LoginFormData = {
+  email: string;
+  password: string;
+};
 
 const LoginPage = () => {
-    
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+const [showPassword, setShowPassword] = useState(false);
+const { loading, error, login} = useAuth();
+const passwordRef = useRef<TextInput>(null);
 
-  const { loading, error, login} = useAuth();
-  const passwordRef = useRef<TextInput>(null);
-  const handleLogin = async () => {
-    await login(email, password);
+const {control,handleSubmit,formState: { errors },} = useForm<LoginFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const handleLogin = async (data: LoginFormData) => {
+    await login(data.email, data.password);
   };
 
   return (
@@ -41,19 +50,43 @@ const LoginPage = () => {
 
               <Text style={s.label}>البريد الإلكتروني</Text>
               <View style={s.inputRow}>
+                
+                <Controller control={control} name="email"   rules={{required: "Email is required",}}
+                render={({ field: { onChange, value } }) => (
+
                 <TextInput autoFocus style={s.input} placeholder="example@gmail.com" placeholderTextColor="#A0A0A0"
-                  keyboardType="email-address" autoCapitalize="none"
-                  value={email} onChangeText={setEmail} textAlign="right" returnKeyType="next" onSubmitEditing={() => passwordRef.current?.focus()}/>
+                  keyboardType="email-address" autoCapitalize="none"value={value} onChangeText={onChange} 
+                  textAlign="right" returnKeyType="next" onSubmitEditing={() => passwordRef.current?.focus()}/> )}
+                />
               </View>
+
+                {errors.email && (<Text style={s.error}>{errors.email.message}</Text>)}
+                
 
               <Text style={s.label}>كلمة المرور</Text>
               <View style={s.inputRow}>
-                <TextInput style={s.input} placeholder="••••••••" placeholderTextColor="#A0A0A0"
-                  secureTextEntry={!showPassword} value={password} onChangeText={setPassword} textAlign="right" returnKeyType="done" onSubmitEditing={handleLogin} ref={passwordRef} />
+                  <Controller control={control} name="password"
+                    rules={{required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Minimum 8 characters",
+                    },
+                  }}
+
+                render={({ field: { onChange, value } }) => (
+                
+                <TextInput ref={(ref) => {passwordRef.current = ref;}} 
+                style={s.input} placeholder="••••••••" placeholderTextColor="#A0A0A0"
+                secureTextEntry={!showPassword} value={value} onChangeText={onChange} textAlign="right" returnKeyType="done" onSubmitEditing={handleSubmit(handleLogin)}  />
+                )}
+                />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                   {showPassword ? <EyeIcon size={18} color="#6A0DAD" /> : <EyeOffIcon size={18} color="#8B8B8B" />}
                 </TouchableOpacity>
               </View>
+
+                {errors.password && (<Text style={s.error}>{errors.password.message}</Text>)}
+
               <TouchableOpacity
                 style={s.forgotContainer}
                 onPress={() => router.push("/forgotpassword")}
@@ -63,7 +96,7 @@ const LoginPage = () => {
               {!!error && <Text style={s.error}>{error}</Text>}
 
               <View style={s.btnRow}>
-                <TouchableOpacity style={[s.btnPrimary, loading && s.btnDisabled]} onPress={handleLogin} disabled={loading}>
+                <TouchableOpacity style={[s.btnPrimary, loading && s.btnDisabled]} onPress={handleSubmit(handleLogin)} disabled={loading}>
                   {loading ? <ActivityIndicator color="#fff" size="small" /> : <Text style={s.btnPrimaryText}>تسجيل الدخول</Text>}
                 </TouchableOpacity>
 
@@ -71,7 +104,6 @@ const LoginPage = () => {
                   <Text style={s.btnOutlineText}>إنشاء حساب</Text>
                 </TouchableOpacity>
               </View>
-
             </View>
           </View>
         </ScrollView>

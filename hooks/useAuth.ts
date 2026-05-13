@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { router } from "expo-router";
-import { loginUser, logoutUser, registerUser } from "../app/page/services/authService";
+import { loginUser, logoutUser, registerUser, resetPassword } from "../app/page/services/authService";
 import { useChalet } from "../app/page/screens/components/ChaletContext";
 
 export const useAuth = () => {
@@ -98,6 +98,42 @@ export const useAuth = () => {
     }
   };
 
+  const resetUserPassword = async (
+  email: string,
+  password: string,
+  confirmPassword: string
+) => {
+  setError("");
+
+  if (password.length < 8) {
+    setError(
+      "Password must be at least 8 characters"
+    );
+    return false;
+  }
+
+  if (password !== confirmPassword) {
+    setError("Passwords do not match");
+    return false;
+  }
+
+  setLoading(true);
+
+  try {
+    await resetPassword(email, password);
+
+    return true;
+  } catch (e: any) {
+    setError(
+      e.message || "Reset password failed"
+    );
+
+    return false;
+  } finally {
+    setLoading(false);
+  }
+};
+
   return {
     loading,
     error,
@@ -105,5 +141,6 @@ export const useAuth = () => {
     login,
     register,
     logout,
+    resetUserPassword,
   };
 };
