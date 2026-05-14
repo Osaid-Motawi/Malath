@@ -144,7 +144,7 @@ export default function ProfilePage() {
       <View style={styles.menu}>
         <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/editprofile")}>
           <Ionicons name="create-outline" size={20} color="#6A0DAD" />
-          <Text style={styles.menuText}>Edit Profile</Text>
+          <Text style={styles.menuText}>تعديل الملف الشخصي</Text>
         </TouchableOpacity>
 
           <TouchableOpacity
@@ -157,19 +157,19 @@ export default function ProfilePage() {
             }
           >
           <Ionicons name="key-outline" size={22} color="#6A0DAD" />
-          <Text style={styles.menuText}>Reset Password?</Text>
+          <Text style={styles.menuText}>إعادة تعيين كلمة المرور</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.menuItem}
           onPress={() => router.push("/favorites")}
         >
           <Ionicons name="heart-outline" size={20} color="#6A0DAD" />
-          <Text style={styles.menuText}>Favorites</Text>
+          <Text style={styles.menuText}>المفضلة</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={() => router.push("/mybooking")}>
           <Ionicons name="home-outline" size={20} color="#6A0DAD" />
-          <Text style={styles.menuText}>My Bookings</Text>
+          <Text style={styles.menuText}>حجوزاتي</Text>
         </TouchableOpacity>
 
         {user?.role === "owner" && (
