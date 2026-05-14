@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useOwnerDashboard } from "@/hooks/useOwnerDashboard";
 import RequestCard from "../components/RequestCard";
 
-export default function OwnerDashboard() {
+const OwnerDashboard = () => {
   const {
     bookings,
     chalets,
@@ -130,3 +130,4 @@ const styles = StyleSheet.create({
   backBtn: {width: 44,height: 44,borderRadius: 22,backgroundColor: "#F4ECFF",justifyContent: "center",alignItems: "center",borderWidth: 1,borderColor: "#E6D7FF",},
   backArrow: {fontSize: 26,fontWeight: "900",color: "#6A0DAD",lineHeight: 28,},
 });
+export default OwnerDashboard;

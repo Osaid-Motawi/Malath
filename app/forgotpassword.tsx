@@ -12,7 +12,7 @@ import {
 
 import { checkEmailExists } from "./page/services/authService";
 
-export default function ForgotPasswordPage() {
+const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const emailRef = useRef<TextInput>(null);
 
@@ -90,3 +90,4 @@ const styles = StyleSheet.create({
   backBtn: { width: 44,height: 44,borderRadius: 22,backgroundColor: "#F4ECFF",justifyContent: "center",alignItems: "center",borderWidth: 1,borderColor: "#E6D7FF",},
   backArrow: {fontSize: 26,fontWeight: "900",color: "#6A0DAD",lineHeight: 28,},
 });
+export default ForgotPasswordPage;

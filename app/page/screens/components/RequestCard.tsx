@@ -16,13 +16,7 @@ interface Props {
   onReject: () => void;
 }
 
-export default function RequestCard({
-  image,
-  title,
-  lines,
-  onAccept,
-  onReject,
-}: Props) {
+const RequestCard = ({image,title,lines,onAccept,onReject,}: Props) => {
   return (
     <View style={styles.card}>
       <View style={styles.cardTop}>
@@ -79,3 +73,4 @@ const styles = StyleSheet.create({
   acceptText: { color: "#fff", fontWeight: "bold",},
   rejectText: {color: "#DC2626",fontWeight: "bold",},
 });
+export default RequestCard;

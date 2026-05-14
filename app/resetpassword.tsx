@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import { useAuth } from "@/hooks/useAuth";
-export default function ResetPasswordPage() {
+const ResetPasswordPage = () => {
   const { email } = useLocalSearchParams();
 
   const [password, setPassword] = useState("");
@@ -128,3 +128,4 @@ const styles = StyleSheet.create({
   backArrow: {fontSize: 26,fontWeight: "900",color: "#6A0DAD",lineHeight: 28,},
   disabledButton: {opacity: 0.6,},
 });
+export default ResetPasswordPage;
