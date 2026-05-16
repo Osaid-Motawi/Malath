@@ -8,7 +8,6 @@ import { HeartIcon, PersonIcon } from "./CustomIcon";
 interface Props {
   chalet: Chalet;
   onPress?: (chalet: Chalet) => void;
-  cardWidth?: number;
 }
 
 const ChaletCard = ({ chalet, onPress }: Props) => {
