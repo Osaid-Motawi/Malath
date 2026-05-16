@@ -164,7 +164,7 @@ return (
                   onPress={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeIcon size={18} color="#888" />
+                    <EyeIcon size={18} color="#6A0DAD" />
                   ) : (
                     <EyeOffIcon size={18} color="#888" />
                   )}
@@ -199,7 +199,7 @@ return (
                   onPress={() => setShowConfirm(!showConfirm)}
                 >
                   {showConfirm ? (
-                    <EyeIcon size={18} color="#888" />
+                    <EyeIcon size={18} color="#6A0DAD" />
                   ) : (
                     <EyeOffIcon size={18} color="#888" />
                   )}
