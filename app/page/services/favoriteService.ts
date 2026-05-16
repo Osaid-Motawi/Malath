@@ -18,6 +18,11 @@ export const addFavorite = async (chaletId: string): Promise<void> => {
   if (!userId) return;
  
   await addDoc(collection(db, "favorites"), { chaletId, userId });
+  await addNotification(
+  userId,
+  "تمت إضافة الشاليه إلى المفضلة",
+  "favorite"
+);
  
   const chalet = await getChaletById(chaletId);
   if (chalet?.ownerId) {
@@ -40,4 +45,9 @@ export const removeFavorite = async (chaletId: string): Promise<void> => {
   );
   const snapshot = await getDocs(q);
   snapshot.docs.forEach((d) => deleteDoc(doc(db, "favorites", d.id)));
+  await addNotification(
+  userId,
+  "تم حذف الشاليه من المفضلة",
+  "favorite"
+);
 };
