@@ -1,7 +1,7 @@
 // /app/page/services/aiService.ts
 import { Platform } from "react-native";
 
-const LOCAL_IP = "192.168.1.3";
+const LOCAL_IP = "172.23.255.39";
 
 export async function askMalathAI(message: string, chalets: any[]) {
   const API_URL =
