@@ -1,24 +1,47 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { ChaletProvider } from "./page/screens/components/ChaletContext";
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+const queryClient = new QueryClient();
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+
+  useEffect(() => {
+    const hideSplash = async () => {
+      await SplashScreen.hideAsync();
+    };
+
+    hideSplash();
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChaletProvider>
+
+        <Stack screenOptions={{ headerShown: false }}>
+
+          <Stack.Screen name="index" />
+
+          <Stack.Screen name="(tabs)" />
+
+          <Stack.Screen name="login" />
+
+          <Stack.Screen name="register" />
+
+          <Stack.Screen name="chalet-details" />
+
+          <Stack.Screen name="add-edit-chalet" />
+
+          <Stack.Screen name="ownerdashboard" />
+
+        </Stack>
+
+      </ChaletProvider>
+    </QueryClientProvider>
   );
 }
