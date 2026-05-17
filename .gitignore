@@ -41,3 +41,11 @@ app-example
 # generated native folders
 /ios
 /android
+
+# Firebase config
+FirebaseConfig.js
+FirebaseConfig.ts
+
+# IDE folders
+.idea/
+.vscode/
