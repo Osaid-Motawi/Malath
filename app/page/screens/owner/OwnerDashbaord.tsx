@@ -15,20 +15,13 @@ import { useOwnerDashboard } from "@/hooks/useOwnerDashboard";
 import RequestCard from "../components/RequestCard";
 
 const OwnerDashboard = () => {
-  const {
-    bookings,
-    chalets,
-    loading,
-    loadDashboard,
-    handleBookingAction,
-    handleChaletAction,
-  } = useOwnerDashboard();
-
-  useFocusEffect(
-    useCallback(() => {
-      loadDashboard();
-    }, [])
-  );
+const {
+  bookings,
+  chalets,
+  loading,
+  handleBookingAction,
+  handleChaletAction,
+} = useOwnerDashboard();
 
   if (loading) {
     return (
